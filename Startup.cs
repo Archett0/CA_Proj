@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CA_Proj.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace CA_Proj
 {
@@ -24,6 +26,10 @@ namespace CA_Proj
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            // Add DB Contexts
+            services.AddDbContext<SystemContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("SystemContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

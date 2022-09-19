@@ -6,6 +6,72 @@
 
 <!-- ck title wrapper End -->
 <!-- btc Shop Wrapper Start -->
+<table class="table">
+	<thead>
+	<tr>
+		<th>
+			@Html.DisplayNameFor(model => model.ProductId)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.ProductName)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.ProductDescription)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.ProductImage)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.ProductPrice)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.ProductDownloadLink)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.ProductOverallRating)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.ProductKeywords)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.ProductQuantitySold)
+		</th>
+	</tr>
+	</thead>
+	<tbody>
+	@foreach (var item in Model) {
+		<tr>
+			<td>
+				@Html.DisplayFor(modelItem => item.ProductId)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.ProductName)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.ProductDescription)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.ProductImage)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.ProductPrice)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.ProductDownloadLink)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.ProductOverallRating)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.ProductKeywords)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.ProductQuantitySold)
+			</td>
+		</tr>
+	}
+	</tbody>
+</table>
 <div class="btc_shop_indx_main_wrapper">
 	<div class="container">
 		<div class="row">
