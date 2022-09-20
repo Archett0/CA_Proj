@@ -9,6 +9,11 @@ namespace CA_Proj.Data
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Product>().ToTable("product");
+        }
+
         public DbSet<Product> Products { get; set; }
     }
 }

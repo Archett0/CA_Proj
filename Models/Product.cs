@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CA_Proj.Models
 {
     public class Product
     {
+        [Key]
         [Column("product_id")]
         public int ProductId { get; set; }
 

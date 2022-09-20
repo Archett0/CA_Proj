@@ -2,76 +2,9 @@
 
 @{
 	ViewData["Title"] = "Gallery Page";
+	var ModelCount = @Model.Count();
 }
 
-<!-- ck title wrapper End -->
-<!-- btc Shop Wrapper Start -->
-<table class="table">
-	<thead>
-	<tr>
-		<th>
-			@Html.DisplayNameFor(model => model.ProductId)
-		</th>
-		<th>
-			@Html.DisplayNameFor(model => model.ProductName)
-		</th>
-		<th>
-			@Html.DisplayNameFor(model => model.ProductDescription)
-		</th>
-		<th>
-			@Html.DisplayNameFor(model => model.ProductImage)
-		</th>
-		<th>
-			@Html.DisplayNameFor(model => model.ProductPrice)
-		</th>
-		<th>
-			@Html.DisplayNameFor(model => model.ProductDownloadLink)
-		</th>
-		<th>
-			@Html.DisplayNameFor(model => model.ProductOverallRating)
-		</th>
-		<th>
-			@Html.DisplayNameFor(model => model.ProductKeywords)
-		</th>
-		<th>
-			@Html.DisplayNameFor(model => model.ProductQuantitySold)
-		</th>
-	</tr>
-	</thead>
-	<tbody>
-	@foreach (var item in Model) {
-		<tr>
-			<td>
-				@Html.DisplayFor(modelItem => item.ProductId)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => item.ProductName)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => item.ProductDescription)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => item.ProductImage)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => item.ProductPrice)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => item.ProductDownloadLink)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => item.ProductOverallRating)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => item.ProductKeywords)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => item.ProductQuantitySold)
-			</td>
-		</tr>
-	}
-	</tbody>
-</table>
 <div class="btc_shop_indx_main_wrapper">
 	<div class="container">
 		<div class="row">
@@ -81,7 +14,15 @@
 						<div class="col-lg-5 col-md-5 col-sm-12 col-12">
 							<div class="gc_shop_indx_search_box_wrapper">
 								<div class="gc_shop_indx_search_box">
-									<p><span>Showing 1-9</span> of 256 Results</p>
+									@if (ModelCount >= 9)
+									{
+										@*TODO:FIX THIS*@
+										<p><span>Showing 1-9</span> of @ModelCount Results</p>
+									}
+									else
+									{
+										<p><span>Showing 1-@ModelCount</span> of @ModelCount Results</p>
+									}
 								</div>
 							</div>
 						</div>
@@ -119,204 +60,44 @@
 						<div class="tab-content">
 							<div id="menu1" class="tab-pane active">
 								<div class="row">
-									<div class="col-lg-4 col-md-6 col-sm-6 col-12">
-										<div class="ck_elem_slide_img_wrapper ck_elem_slide_img_wrapper_inner float_left">
-											<div class="ck_elem_slide_img float_left">
-												<img src="images/e1.png" alt="img">
-											</div>
-											<div class="ck_elem_slide_img_cont ck_elem_slide_img_cont_inner float_left">
-												<h3>Cherry Vanilla</h3>
-												<div class="ck_elem_star">
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
+									@foreach (var item in Model)
+									{
+										<div class="col-lg-4 col-md-6 col-sm-6 col-12">
+											<div class="ck_elem_slide_img_wrapper ck_elem_slide_img_wrapper_inner float_left">
+												<div class="ck_elem_slide_img float_left">
+													<img src=@item.ProductImage alt="img">
 												</div>
-												<p>Aenean sollicitudin, lorem quis</p>
-												<h5>$ 10.00</h5>
-												<div class="ck_offer_btn ck_offer_btn_inner float_left">
-													<a href="#">Add to Cart</a>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-lg-4 col-md-6 col-sm-6 col-12">
-										<div class="ck_elem_slide_img_wrapper ck_elem_slide_img_wrapper_inner float_left">
-											<div class="ck_elem_slide_img float_left">
-												<img src="images/e2.png" alt="img">
-											</div>
-											<div class="ck_elem_slide_img_cont ck_elem_slide_img_cont_inner float_left">
-												<h3>Cherry Vanilla</h3>
-												<div class="ck_elem_star">
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-												</div>
-												<p>Aenean sollicitudin, lorem quis</p>
-												<h5>$ 10.00</h5>
-												<div class="ck_offer_btn ck_offer_btn_inner float_left">
-													<a href="#">Add to Cart</a>
+												<div class="ck_elem_slide_img_cont ck_elem_slide_img_cont_inner float_left">
+													<h3>@item.ProductName</h3>
+													@* TODO: ADD HOT SALE PRODUCTS *@
+													<div class="ck_elem_star">
+														@if (item.ProductOverallRating.Equals(0.0))
+														{
+															<text>No Rating Yet.</text>
+														}
+														else
+														{
+															var stars = (int)item.ProductOverallRating;
+															for (var star = 0; star < stars; ++star)
+															{
+																<i class="fas fa-star"></i>
+															}
+															if (item.ProductOverallRating - stars >= 0.5)
+															{
+																<i class="fas fa-star-half"></i>
+															}
+														}
+													</div>
+													<p>@item.ProductDescription</p>
+													<h5>$ @item.ProductPrice</h5>
+													<div class="ck_offer_btn ck_offer_btn_inner float_left">
+														<a href="#">Add to Cart</a>
+													</div>
 												</div>
 											</div>
 										</div>
-									</div>
-									<div class="col-lg-4 col-md-6 col-sm-6 col-12">
-										<div class="ck_elem_slide_img_wrapper ck_elem_slide_img_wrapper_inner float_left">
-											<div class="ck_elem_slide_img float_left">
-												<img src="images/e3.png" alt="img">
-											</div>
-											<div class="ck_elem_slide_img_cont ck_elem_slide_img_cont_inner float_left">
-												<h3>Cherry Vanilla</h3>
-												<div class="ck_elem_star">
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-												</div>
-												<p>Aenean sollicitudin, lorem quis</p>
-												<h5>$ 10.00</h5>
-												<div class="ck_offer_btn ck_offer_btn_inner float_left">
-													<a href="#">Add to Cart</a>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-lg-4 col-md-6 col-sm-6 col-12">
-										<div class="ck_elem_slide_img_wrapper ck_elem_slide_img_wrapper_inner float_left">
-											<div class="ck_elem_slide_img float_left">
-												<img src="images/e4.png" alt="img">
-											</div>
-											<div class="ck_elem_slide_img_cont ck_elem_slide_img_cont_inner float_left">
-												<h3>Cherry Vanilla</h3>
-												<div class="ck_elem_star">
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-												</div>
-												<p>Aenean sollicitudin, lorem quis</p>
-												<h5>$ 10.00</h5>
-												<div class="ck_offer_btn ck_offer_btn_inner float_left">
-													<a href="#">Add to Cart</a>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-lg-4 col-md-6 col-sm-6 col-12">
-										<div class="ck_elem_slide_img_wrapper ck_elem_slide_img_wrapper_inner float_left">
-											<div class="ck_elem_slide_img float_left">
-												<img src="images/e5.png" alt="img">
-											</div>
-											<div class="ck_elem_slide_img_cont ck_elem_slide_img_cont_inner float_left">
-												<h3>Cherry Vanilla</h3>
-												<div class="ck_elem_star">
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-												</div>
-												<p>Aenean sollicitudin, lorem quis</p>
-												<h5>$ 10.00</h5>
-												<div class="ck_offer_btn ck_offer_btn_inner float_left">
-													<a href="#">Add to Cart</a>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-lg-4 col-md-6 col-sm-6 col-12">
-										<div class="ck_elem_slide_img_wrapper ck_elem_slide_img_wrapper_inner float_left">
-											<div class="ck_elem_slide_img float_left">
-												<img src="images/e6.png" alt="img">
-											</div>
-											<div class="ck_elem_slide_img_cont ck_elem_slide_img_cont_inner float_left">
-												<h3>Cherry Vanilla</h3>
-												<div class="ck_elem_star">
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-												</div>
-												<p>Aenean sollicitudin, lorem quis</p>
-												<h5>$ 10.00</h5>
-												<div class="ck_offer_btn ck_offer_btn_inner float_left">
-													<a href="#">Add to Cart</a>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-lg-4 col-md-6 col-sm-6 col-12">
-										<div class="ck_elem_slide_img_wrapper ck_elem_slide_img_wrapper_inner float_left">
-											<div class="ck_elem_slide_img float_left">
-												<img src="images/e7.png" alt="img">
-											</div>
-											<div class="ck_elem_slide_img_cont ck_elem_slide_img_cont_inner float_left">
-												<h3>Cherry Vanilla</h3>
-												<div class="ck_elem_star">
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-												</div>
-												<p>Aenean sollicitudin, lorem quis</p>
-												<h5>$ 10.00</h5>
-												<div class="ck_offer_btn ck_offer_btn_inner float_left">
-													<a href="#">Add to Cart</a>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-lg-4 col-md-6 col-sm-6 col-12">
-										<div class="ck_elem_slide_img_wrapper ck_elem_slide_img_wrapper_inner float_left">
-											<div class="ck_elem_slide_img float_left">
-												<img src="images/e8.png" alt="img">
-											</div>
-											<div class="ck_elem_slide_img_cont ck_elem_slide_img_cont_inner float_left">
-												<h3>Cherry Vanilla</h3>
-												<div class="ck_elem_star">
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-												</div>
-												<p>Aenean sollicitudin, lorem quis</p>
-												<h5>$ 10.00</h5>
-												<div class="ck_offer_btn ck_offer_btn_inner float_left">
-													<a href="#">Add to Cart</a>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-lg-4 col-md-6 col-sm-6 col-12">
-										<div class="ck_elem_slide_img_wrapper ck_elem_slide_img_wrapper_inner float_left">
-											<div class="ck_elem_slide_img float_left">
-												<img src="images/e9.png" alt="img">
-											</div>
-											<div class="ck_elem_slide_img_cont ck_elem_slide_img_cont_inner float_left">
-												<h3>Cherry Vanilla</h3>
-												<div class="ck_elem_star">
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-												</div>
-												<p>Aenean sollicitudin, lorem quis</p>
-												<h5>$ 10.00</h5>
-												<div class="ck_offer_btn ck_offer_btn_inner float_left">
-													<a href="#">Add to Cart</a>
-												</div>
-											</div>
-										</div>
-									</div>
+									}
+									@* TODO:分页栏 *@
 									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 hidden-sm hidden-xs">
 										<div class="pager_wrapper">
 											<ul class="pagination">
@@ -343,118 +124,46 @@
 									</div>
 								</div>
 							</div>
+							@*横板排版*@
 							<div id="menu2" class="tab-pane fade">
 								<div class="row">
-									<div class="col-md-12">
-										<div class="ck_elem_slide_img_wrapper ck_elem_slide_img_wrapper_inner ck_elem_slide_img_wrapper_inner_list float_left">
-											<div class="ck_elem_slide_img ck_elem_slide_img_list float_left align-self-center">
-												<img src="images/e1.png" alt="img">
-											</div>
-											<div class="ck_elem_slide_img_cont ck_elem_slide_img_cont_inner ck_elem_slide_img_list_cont float_left">
-												<h3>Cherry Vanilla</h3>
-												<div class="ck_elem_star">
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
+									@foreach (var item in Model)
+									{
+										<div class="col-md-12">
+											<div class="ck_elem_slide_img_wrapper ck_elem_slide_img_wrapper_inner ck_elem_slide_img_wrapper_inner_list float_left">
+												<div class="ck_elem_slide_img ck_elem_slide_img_list float_left align-self-center">
+													<img src=@item.ProductImage alt="img">
 												</div>
-												<p>Aenean sollicitudin, lorem quis</p>
-												<h5>$ 10.00</h5>
-												<div class="ck_offer_btn ck_offer_btn_inner float_left">
-													<a href="#">Add to Cart</a>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-md-12">
-										<div class="ck_elem_slide_img_wrapper ck_elem_slide_img_wrapper_inner ck_elem_slide_img_wrapper_inner_list float_left">
-											<div class="ck_elem_slide_img ck_elem_slide_img_list float_left align-self-center">
-												<img src="images/e2.png" alt="img">
-											</div>
-											<div class="ck_elem_slide_img_cont ck_elem_slide_img_cont_inner ck_elem_slide_img_list_cont float_left">
-												<h3>Cherry Vanilla</h3>
-												<div class="ck_elem_star">
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-												</div>
-												<p>Aenean sollicitudin, lorem quis</p>
-												<h5>$ 10.00</h5>
-												<div class="ck_offer_btn ck_offer_btn_inner float_left">
-													<a href="#">Add to Cart</a>
+												<div class="ck_elem_slide_img_cont ck_elem_slide_img_cont_inner ck_elem_slide_img_list_cont float_left">
+													<h3>@item.ProductName</h3>
+													<div class="ck_elem_star">
+														@if (item.ProductOverallRating.Equals(0.0))
+														{
+															<text>No Rating Yet.</text>
+														}
+														else
+														{
+															var stars = (int)item.ProductOverallRating;
+															for (var star = 0; star < stars; ++star)
+															{
+																<i class="fas fa-star"></i>
+															}
+															if (item.ProductOverallRating - stars >= 0.5)
+															{
+																<i class="fas fa-star-half"></i>
+															}
+														}
+													</div>
+													<p>@item.ProductDescription</p>
+													<h5>$ @item.ProductPrice</h5>
+													<div class="ck_offer_btn ck_offer_btn_inner float_left">
+														<a href="#">Add to Cart</a>
+													</div>
 												</div>
 											</div>
 										</div>
-									</div>
-									<div class="col-md-12">
-										<div class="ck_elem_slide_img_wrapper ck_elem_slide_img_wrapper_inner ck_elem_slide_img_wrapper_inner_list float_left">
-											<div class="ck_elem_slide_img ck_elem_slide_img_list float_left align-self-center">
-												<img src="images/e3.png" alt="img">
-											</div>
-											<div class="ck_elem_slide_img_cont ck_elem_slide_img_cont_inner ck_elem_slide_img_list_cont float_left">
-												<h3>Cherry Vanilla</h3>
-												<div class="ck_elem_star">
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-												</div>
-												<p>Aenean sollicitudin, lorem quis</p>
-												<h5>$ 10.00</h5>
-												<div class="ck_offer_btn ck_offer_btn_inner float_left">
-													<a href="#">Add to Cart</a>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-md-12">
-										<div class="ck_elem_slide_img_wrapper ck_elem_slide_img_wrapper_inner ck_elem_slide_img_wrapper_inner_list float_left">
-											<div class="ck_elem_slide_img ck_elem_slide_img_list float_left align-self-center">
-												<img src="images/e4.png" alt="img">
-											</div>
-											<div class="ck_elem_slide_img_cont ck_elem_slide_img_cont_inner ck_elem_slide_img_list_cont float_left">
-												<h3>Cherry Vanilla</h3>
-												<div class="ck_elem_star">
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-												</div>
-												<p>Aenean sollicitudin, lorem quis</p>
-												<h5>$ 10.00</h5>
-												<div class="ck_offer_btn ck_offer_btn_inner float_left">
-													<a href="#">Add to Cart</a>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-md-12">
-										<div class="ck_elem_slide_img_wrapper ck_elem_slide_img_wrapper_inner ck_elem_slide_img_wrapper_inner_list float_left">
-											<div class="ck_elem_slide_img ck_elem_slide_img_list float_left align-self-center">
-												<img src="images/e5.png" alt="img">
-											</div>
-											<div class="ck_elem_slide_img_cont ck_elem_slide_img_cont_inner ck_elem_slide_img_list_cont float_left">
-												<h3>Cherry Vanilla</h3>
-												<div class="ck_elem_star">
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-													<i class="fas fa-star"></i>
-												</div>
-												<p>Aenean sollicitudin, lorem quis</p>
-												<h5>$ 10.00</h5>
-												<div class="ck_offer_btn ck_offer_btn_inner float_left">
-													<a href="#">Add to Cart</a>
-												</div>
-											</div>
-										</div>
-									</div>
+									}
+									@*TODO:分页栏*@
 									<div class="col-md-12">
 										<div class="pager_wrapper float_left">
 											<ul class="pagination">
@@ -496,10 +205,10 @@
 			<div class="ck_cll_icon align-self-center">
 				<i class="flaticon-phone-contact"></i>
 				<h4>Call Us</h4>
-				<p>+91 907 474 4316</p>
+				<p>505-842-5662</p>
 			</div>
 			<div class="ck_cll_img">
-				<img src="images/cll_img.png" alt="img">
+				<img src="https://www.iss.nus.edu.sg/images/default-source/executive-education/stackable-programmesc1f9a2de42136fdb9c52ff000079db5a.png?sfvrsn=7ceacd5f_4" alt="img" style="width: 376px;height: 170px">
 			</div>
 		</div>
 		<div class="ck_cll_right_wrapper">
@@ -525,33 +234,33 @@
 				<div class="lr_prt_slider_wrapper">
 					<div class="owl-carousel owl-theme">
 						<div class="item">
-							<div class="lr_prt_img_wrapper">
-								<img src="images/p1.jpg" alt="partner_img">
+							<div>
+								<img src="https://www.webopedia.com/wp-content/uploads/1997/02/Webo.OracleProfile.png" alt="partner_img">
 							</div>
 						</div>
 						<div class="item">
 							<div class="lr_prt_img_wrapper">
-								<img src="images/p2.jpg" alt="partner_img">
+								<img src="https://coursera-university-assets.s3.amazonaws.com/2c/b88aeceb118473298dee56d456cdc0/NUSlogo.png" alt="partner_img">
 							</div>
 						</div>
 						<div class="item">
 							<div class="lr_prt_img_wrapper">
-								<img src="images/p3.jpg" alt="partner_img">
+								<img src="https://support.apple.com/library/content/dam/edam/applecare/images/en_US/appleid/gift-cards-apple.png" alt="partner_img">
 							</div>
 						</div>
 						<div class="item">
 							<div class="lr_prt_img_wrapper">
-								<img src="images/p4.jpg" alt="partner_img">
+								<img src="http://res.cloudinary.com/ctung/image/upload/v1/12/original/:company/microsoft.jpg" alt="partner_img">
 							</div>
 						</div>
 						<div class="item">
 							<div class="lr_prt_img_wrapper">
-								<img src="images/p5.jpg" alt="partner_img">
+								<img src="https://www.docker.com/wp-content/uploads/2022/03/vertical-logo-monochromatic.png" alt="partner_img">
 							</div>
 						</div>
 						<div class="item">
 							<div class="lr_prt_img_wrapper">
-								<img src="images/p6.jpg" alt="partner_img">
+								<img src="https://upyun.liehuzuo.top/d13fc2687d9335eddd4dc23ccd8c8b8e.jpg" alt="partner_img">
 							</div>
 						</div>
 					</div>
@@ -568,52 +277,43 @@
 				<div class="footer_widget footer_about_wrapper float_left">
 					<div class="wrapper_first_image">
 						<a href="index.html">
-							<img src="images/logo.png" class="img-responsive" alt="logo" />
+							<img src="images/logo.jpg" class="img-responsive" alt="logo" style="width: 50%"/>
 						</a>
 					</div>
 					<div class="abotus_content">
 						<p>
-							Donec id elit non mi porta gravida at eget metus. Donec id elit non mi porta gravida at eget metus. Aenean lacinia bibendum nulla sed consectetur.
+							This is a simple Education Shop.
 							<br>
-							<br>Vestibulum id ligula porta felis euismod semper. pharetra augue. Maecenas faucibus interdum...
+							<br>Our goal is to Make America Great Again.
 						</p>
 					</div> <a href="#" class="blog_read">read more <i class="fas fa-long-arrow-alt-right"></i></a>
 				</div>
 			</div>
 			<div class="col-lg-3 col-md-6 col-12 col-sm-12">
 				<div class="footer_widget footer_blog_wrapper footer_widget3 float_left">
-					<h4>recent posts</h4>
+					<h4>recent merchants</h4>
 					<div class="ft_blog_wrapper1">
-						<div class="ft_blog_image">
-							<img src="images/blg1.jpg" class="img-responsive" alt="img" />
-						</div>
 						<div class="ft_blog_text">
 							<p>
-								<a href="#">Donec id elit non mi porta gravida </a>
+								<text>Black Friday Big Sale!!!</text>
 							</p>
-							<div class="ft_blog_date">22 april, 2019</div>
+							<div class="ft_blog_date">11 November, 2021</div>
 						</div>
 					</div>
 					<div class="ft_blog_wrapper1">
-						<div class="ft_blog_image">
-							<img src="images/blg3.jpg" class="img-responsive" alt="img" />
-						</div>
 						<div class="ft_blog_text">
 							<p>
-								<a href="#">elit non mi porta  Donec id gravida </a>
+								<text>Big Sale!</text>
 							</p>
-							<div class="ft_blog_date">11 april, 2019</div>
+							<div class="ft_blog_date">21 may, 2022</div>
 						</div>
 					</div>
 					<div class="ft_blog_wrapper2">
-						<div class="ft_blog_image">
-							<img src="images/blg2.jpg" class="img-responsive" alt="img" />
-						</div>
 						<div class="ft_blog_text">
 							<p>
-								<a href="#">Donec id elit non elit non mi porta </a>
+								<text>Huge Discount!</text>
 							</p>
-							<div class="ft_blog_date">12 april, 2019</div>
+							<div class="ft_blog_date">18 june, 2022</div>
 						</div>
 					</div>
 				</div>
@@ -622,7 +322,7 @@
 				<div class="footer_widget footer_useful_wrapper footer_widget2 float_left">
 					<h4>get in touch</h4>
 					<div class="contect_form_footer float_left">
-						<input type="text" name="name" placeholder="joahn doe"><i class="fas fa-user-alt"></i>
+						<input type="text" name="name" placeholder="Rick Ashley"><i class="fas fa-user-alt"></i>
 					</div>
 					<div class="contect_form_footer float_left">
 						<input type="text" name="Email" placeholder="Email ID"><i class="fas fa-comment"></i>
@@ -641,121 +341,27 @@
 					<ul>
 						<li>
 							<span>
-								Santa Cruz
-								Office:
+								Team 1
 							</span>
 							<p>
-								<a href="#">
-									Crorpo Technologies,
-									9860 Mill Road,
-									Deltona, FL 32725, US
-								</a>
+								<text>
+									On Earth
+								</text>
 							</p>
 						</li>
 						<li>
 							<span>phone: </span>
-							<p>+1-202-555-0175 +1-202-555-0107</p>
+							<p>DO NOT EXIST</p>
 						</li>
 						<li>
 							<span>email: </span>
 							<p>
-								<a href="#"> crorpo@example.com</a>
+								<a href="emailto:yougotrickrolled@nus.edu.sg">rickashley@nus.edu.sg</a>
 								<br>
-								<a href="#">
-									support@example.com
-								</a>
 							</p>
 						</li>
 					</ul>
 				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
-<!-- st login wrapper Start -->
-<div class="modal fade st_pop_form_wrapper" id="myModal" role="dialog">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<button type="button" class="close" data-dismiss="modal">&times;</button>
-			<div class="st_pop_form_heading_wrapper float_left">
-				<h3>Log in</h3>
-			</div>
-			<div class="st_profile_input float_left">
-				<input type="text" placeholder="Email / Mobile Number">
-			</div>
-			<div class="st_profile_input st_profile__pass_input_pop float_left">
-				<input type="password" placeholder="Password">
-			</div>
-			<div class="st_form_pop_fp float_left">
-				<h3><a href="#" data-toggle="modal" data-target="#myModa2" target="_blank">Forgot Password?</a></h3>
-			</div>
-			<div class="st_form_pop_login_btn float_left">
-				<a href="">LOGIN</a>
-			</div>
-			<div class="st_form_pop_or_btn float_left">
-				<h4>or</h4>
-			</div>
-			<div class="st_form_pop_facebook_btn float_left">
-				<a href="#"><i class="fab fa-facebook-f"></i> Connect with Facebook</a>
-			</div>
-			<div class="st_form_pop_gmail_btn float_left">
-				<a href="#"><i class="fab fa-google-plus-g"></i> Connect with Google</a>
-			</div>
-			<div class="st_form_pop_signin_btn float_left">
-				<h4>Don’t have an account? <a href="#" data-toggle="modal" data-target="#myModa3" target="_blank">Sign Up</a></h4>
-				<h5>I agree to the <a href="#">Terms & Conditions</a> & <a href="#">Privacy Policy</a></h5>
-			</div>
-		</div>
-	</div>
-</div>
-<div class="modal fade st_pop_form_wrapper" id="myModa2" role="dialog">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<button type="button" class="close" data-dismiss="modal">&times;</button>
-			<div class="st_pop_form_heading_wrapper st_pop_form_heading_wrapper_fpass float_left">
-				<h3>Forgot Password</h3>
-				<p>We can help! All you need to do is enter your email ID and follow the instructions!</p>
-			</div>
-			<div class="st_profile_input st_profile_input_very float_left">
-				<input type="text" placeholder="Email / Mobile Number">
-			</div>
-			<div class="st_form_pop_fpass_btn float_left">
-				<a href="#">Verify</a>
-			</div>
-		</div>
-	</div>
-</div>
-<div class="modal fade st_pop_form_wrapper" id="myModa3" role="dialog">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<button type="button" class="close" data-dismiss="modal">&times;</button>
-			<div class="st_pop_form_heading_wrapper float_left">
-				<h3>Sign Up</h3>
-			</div>
-			<div class="st_profile_input float_left">
-				<input type="text" placeholder="Email / Mobile Number">
-			</div>
-			<div class="st_profile_input st_profile__pass_input_pop float_left">
-				<input type="password" placeholder="Password">
-			</div>
-			<div class="st_form_pop_fp float_left">
-				<h3><a href="#" data-toggle="modal" data-target="#myModa2" target="_blank">Forgot Password?</a></h3>
-			</div>
-			<div class="st_form_pop_login_btn float_left">
-				<a href="">LOGIN</a>
-			</div>
-			<div class="st_form_pop_or_btn float_left">
-				<h4>or</h4>
-			</div>
-			<div class="st_form_pop_facebook_btn float_left">
-				<a href="#"><i class="fab fa-facebook-f"></i> Connect with Facebook</a>
-			</div>
-			<div class="st_form_pop_gmail_btn float_left">
-				<a href="#"><i class="fab fa-google-plus-g"></i> Connect with Google</a>
-			</div>
-			<div class="st_form_pop_signin_btn st_form_pop_signin_btn_signup float_left">
-				<h5>I agree to the <a href="#">Terms & Conditions</a> & <a href="#">Privacy Policy</a></h5>
 			</div>
 		</div>
 	</div>
