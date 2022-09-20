@@ -8,6 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CA_Proj.Data;
+using Microsoft.EntityFrameworkCore;
+using MySql.EntityFrameworkCore.Infrastructure;
 
 namespace CA_Proj
 {
@@ -24,6 +27,10 @@ namespace CA_Proj
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            // Add DB Contexts
+            services.AddDbContext<SystemContext>(options =>
+                options.UseMySQL(Configuration.GetConnectionString("SystemContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,7 +57,7 @@ namespace CA_Proj
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Product}/{action=Index}/{id?}");
             });
         }
     }

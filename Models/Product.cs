@@ -1,16 +1,36 @@
-﻿namespace CA_Proj.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace CA_Proj.Models
 {
     public class Product
     {
+        [Key]
+        [Column("product_id")]
         public int ProductId { get; set; }
-        public string ProductName { get; set; }
-        public string ProductDescription { get; set; }
-        public string ProductImage { get; set; }
-        public double ProductPrice { get; set; }
-        public string ProductDownloadLink { get; set; }
-        public double ProductOverallRating { get; set; }
-        public string ProductKeywords { get; set; }
-        public int ProductQuantitySold { get; set; }
 
+        [Column("product_name")]
+        public string ProductName { get; set; }
+
+        [Column("product_description")]
+        public string ProductDescription { get; set; }
+
+        [Column("product_image")]
+        public string ProductImage { get; set; }
+
+        [Column("product_price")]
+        public double ProductPrice { get; set; }
+
+        [Column("product_download_link")]
+        public string ProductDownloadLink { get; set; }
+
+        [Column("product_overall_rating")]
+        public double ProductOverallRating { get; set; }
+
+        [Column("product_keywords")]
+        public string ProductKeywords { get; set; }
+
+        [Column("product_quantity_sold")]
+        public int ProductQuantitySold { get; set; }
     }
 }
