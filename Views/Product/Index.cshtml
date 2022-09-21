@@ -1,10 +1,32 @@
 ﻿@model IEnumerable<CA_Proj.Models.Product>
 
 @{
-	ViewData["Title"] = "Gallery Page";
-	var ModelCount = @Model.Count();
+	ViewData["Title"] = "Gallery";
+	var modelCount = @Model.Count();
 }
 
+<!-- ck title wrapper -->
+<div class="ck_title_main_wrapper float_left">
+	<div class="container">
+		<div class="row">
+			<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+				<div class="ck_title_cont float_left">
+					<p>Products</p>
+				</div>
+			</div>
+			<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+				<div class="ck_title_cont float_left">
+					<ul>
+						<li>
+							<a asp-area="" asp-controller="Product" asp-action="Index">Home</a>&nbsp; >
+						</li>
+						<li>Products</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 <div class="btc_shop_indx_main_wrapper">
 	<div class="container">
 		<div class="row">
@@ -14,14 +36,14 @@
 						<div class="col-lg-5 col-md-5 col-sm-12 col-12">
 							<div class="gc_shop_indx_search_box_wrapper">
 								<div class="gc_shop_indx_search_box">
-									@if (ModelCount >= 9)
+									@if (modelCount >= 9)
 									{
 										@*TODO:FIX THIS*@
-										<p><span>Showing 1-9</span> of @ModelCount Results</p>
+										<p><span>Showing 1-9</span> of @modelCount Results</p>
 									}
 									else
 									{
-										<p><span>Showing 1-@ModelCount</span> of @ModelCount Results</p>
+										<p><span>Showing 1-@modelCount</span> of @modelCount Results</p>
 									}
 								</div>
 							</div>
