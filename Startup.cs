@@ -29,8 +29,8 @@ namespace CA_Proj
             services.AddControllersWithViews();
 
             // Add DB Contexts
-            services.AddDbContext<SystemContext>(options =>
-                options.UseMySQL(Configuration.GetConnectionString("SystemContext")));
+                services.AddDbContext<SystemContext>(options =>
+                    options.UseMySQL(Configuration.GetConnectionString("SystemContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

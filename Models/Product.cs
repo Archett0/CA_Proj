@@ -1,6 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 namespace CA_Proj.Models
 {
     public class Product
@@ -32,5 +36,6 @@ namespace CA_Proj.Models
 
         [Column("product_quantity_sold")]
         public int ProductQuantitySold { get; set; }
+
     }
 }
