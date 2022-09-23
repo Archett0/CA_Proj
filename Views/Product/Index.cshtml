@@ -2,7 +2,10 @@
 
 @{
 	ViewData["Title"] = "Gallery";
-	var modelCount = @Model.Count();
+	var modelCount = Model.Count();
+	int pageNow = Convert.ToInt16(ViewData["pageNow"]);
+	int sizeNow = Convert.ToInt16(ViewData["pageSize"]);
+	int pageCount = 1;
 }
 
 <!-- ck title wrapper -->
@@ -36,9 +39,13 @@
 						<div class="col-lg-5 col-md-5 col-sm-12 col-12">
 							<div class="gc_shop_indx_search_box_wrapper">
 								<div class="gc_shop_indx_search_box">
-									@if (modelCount >= 9)
+									@if (modelCount >= sizeNow)
 									{
 										@*TODO:FIX THIS*@
+										if (modelCount % sizeNow != 0)
+											pageCount = modelCount / sizeNow + 1;
+										else
+											pageCount = modelCount / sizeNow;
 										<p><span>Showing 1-9</span> of @modelCount Results</p>
 									}
 									else
@@ -82,7 +89,18 @@
 						<div class="tab-content">
 							<div id="menu1" class="tab-pane active">
 								<div class="row">
-									@foreach (var item in Model)
+									@{
+										var products = Model.ToList();
+										var indexnow = (pageNow - 1) * 9;
+										if ((indexnow + 9) > products.Count())
+										{
+											sizeNow = products.Count() - indexnow;
+
+										}
+										var plist = products.GetRange(indexnow, sizeNow);
+									}
+
+									@foreach (var item in plist)
 									{
 										<div class="col-lg-4 col-md-6 col-sm-6 col-12">
 											<div class="ck_elem_slide_img_wrapper ck_elem_slide_img_wrapper_inner float_left">
@@ -119,37 +137,55 @@
 											</div>
 										</div>
 									}
+
 									@* TODO:分页栏 *@
 									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 hidden-sm hidden-xs">
 										<div class="pager_wrapper">
 											<ul class="pagination">
 												<li>
-													<a href="#"><i class="flaticon-left-arrow"></i></a>
+													@{
+														var up = pageNow;
+														if (up > 1)
+															up = up - 1;
+													}
+													<a href="/Product/index/?pageIndex=@up"><i class="flaticon-left-arrow"></i></a>
 												</li>
-												<li class="btc_shop_pagi">
-													<a href="#">01</a>
-												</li>
-												<li class="btc_shop_pagi">
-													<a href="#">02</a>
-												</li>
-												<li class="btc_third_pegi btc_shop_pagi">
-													<a href="#">03</a>
-												</li>
-												<li class="hidden-xs btc_shop_pagi">
-													<a href="#">04</a>
-												</li>
+												@{var pagei = 1;}
+												@for(;@pagei<= pageCount; pagei++)
+												{
+													<li class="btc_shop_pagi">
+														<a href="/Product/index/?pageIndex=@pagei">@pagei</a>
+													</li>
+												}
 												<li>
-													<a href="#"><i class="flaticon-right-arrow"></i></a>
+													@{
+														var down = pageNow;
+														if (down < pageCount)
+															down = down + 1;
+													}
+													<a href="/Product/index/?pageIndex=@down"><i class="flaticon-right-arrow"></i></a>
 												</li>
 											</ul>
 										</div>
 									</div>
 								</div>
 							</div>
+
 							@*横板排版*@
 							<div id="menu2" class="tab-pane fade">
 								<div class="row">
-									@foreach (var item in Model)
+										@{
+									    products = Model.ToList();
+										indexnow = (pageNow - 1) * 9;
+										if ((indexnow + 9) > products.Count())
+										{
+											sizeNow = products.Count() - indexnow;
+
+										}
+										plist = products.GetRange(indexnow, sizeNow);
+									}
+
+									@foreach (var item in plist)
 									{
 										<div class="col-md-12">
 											<div class="ck_elem_slide_img_wrapper ck_elem_slide_img_wrapper_inner ck_elem_slide_img_wrapper_inner_list float_left">
@@ -190,22 +226,27 @@
 										<div class="pager_wrapper float_left">
 											<ul class="pagination">
 												<li>
-													<a href="#"><i class="flaticon-left-arrow"></i></a>
+												@{
+														up = pageNow;
+														if (up > 1)
+															up = up - 1;
+													}
+													<a href="/Product/index/?pageIndex=@up"><i class="flaticon-left-arrow"></i></a>
 												</li>
-												<li class="btc_shop_pagi">
-													<a href="#">01</a>
-												</li>
-												<li class="btc_shop_pagi">
-													<a href="#">02</a>
-												</li>
-												<li class="btc_third_pegi btc_shop_pagi">
-													<a href="#">03</a>
-												</li>
-												<li class="hidden-xs btc_shop_pagi">
-													<a href="#">04</a>
-												</li>
+												@{pagei = 1;}
+												@for(;@pagei<= pageCount; pagei++)
+												{
+													<li class="btc_shop_pagi">
+														<a href="/Product/index/?pageIndex=@pagei">@pagei</a>
+													</li>
+												}
 												<li>
-													<a href="#"><i class="flaticon-right-arrow"></i></a>
+													@{
+														down = pageNow;
+														if (down < pageCount)
+															down = down + 1;
+													}
+													<a href="/Product/index/?pageIndex=@down"><i class="flaticon-right-arrow"></i></a>
 												</li>
 											</ul>
 										</div>
