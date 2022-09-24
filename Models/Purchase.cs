@@ -24,7 +24,7 @@ namespace CA_Proj.Models
         [Column("purchase_total_price")]
         public double Total_price { get; set; }
         [Column("purchase_is_cart")]
-        public short Is_cart { get; set; }
+        public int Is_cart { get; set; }
         [Column("purchase_status")]
         public short Status { get; set; }
     }

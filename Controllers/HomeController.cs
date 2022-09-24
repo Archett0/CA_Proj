@@ -20,6 +20,11 @@ namespace CA_Proj.Controllers
 
         public IActionResult Index()
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetObject<string>("userid")))
+            {
+                HttpContext.Session.SetObject("userid", 2);
+                HttpContext.Session.SetObject("cart_upto_date", false);
+            }
             return View();
         }
 

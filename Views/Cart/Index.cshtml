@@ -2,7 +2,6 @@
 	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-	@model IEnumerable<CA_Proj.Models.PurchaseProduct>
 	ViewData["Title"] = "Cart";
 }
 
@@ -52,57 +51,60 @@
 						</thead>
 						<tbody>
 							@{
+								@model IEnumerable<CA_Proj.Models.PurchaseProduct>
 								var count = 1;
 								var total = 0.0;
+								if(Model!=null){
 									@foreach(var item in Model)
 									{
 										var product = item.Product;
 										var totalPrice = (double)item.ProductQuantity * product.ProductPrice;
 										total = total+totalPrice;
-										<tr>
-											<td>@count</td>
-											<td>
-												<div class="table_cart_img">
-													<figure>
-														<img src=@product.ProductImage alt="" />
-													</figure>
-												</div>
-												<div class="table_cart_cntnt">
-													<h1>@product.ProductName</h1>
-													@*<p>Chocobar</p>*@
-												</div>
-											</td>
-											<td></td>
-											<td class="cart_page_price">$@product.ProductPrice</td>
-											<td>
-												<input value=@item.ProductQuantity type="number" />
-											</td>
-											<td class="cart_page_totl">$@totalPrice</td>
-											<td>
-												<a href="#">
-													<i class="fa fa-trash"></i>
-												</a>
-											</td>
-										</tr>
+											<tr>
+												<td>@count</td>
+												<td>
+													<div class="table_cart_img">
+														<figure>
+															<img src=@product.ProductImage alt="" />
+														</figure>
+													</div>
+													<div class="table_cart_cntnt">
+														<h1>@product.ProductName</h1>
+														@*<p>Chocobar</p>*@
+													</div>
+												</td>
+												<td></td>
+												<td class="cart_page_price">$@product.ProductPrice</td>
+												<td>
+													<input value=@item.ProductQuantity type="number" />
+												</td>
+												<td class="cart_page_totl">$@totalPrice</td>
+												<td>
+													<a href="#">
+														<i class="fa fa-trash"></i>
+													</a>
+												</td>
+											</tr>
 									count++;
 									}
-								<tr>
-									<td></td>
-									<td class="shop_car_btn_wrapper">
-										<ul>
-											<li>
-												<a href="https://localhost:44368/Cart#">Continue Shopping</a>
-											</li>
-										</ul>
-									</td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td class="cart_btn_cntnt">
-										Sub Total : <span>@total </span>
-									</td>
-									<td></td>
-								</tr>
+									<tr>
+										<td></td>
+										<td class="shop_car_btn_wrapper">
+											<ul>
+												<li>
+													<a href="https://localhost:44368/Cart#">Continue Shopping</a>
+												</li>
+											</ul>
+										</td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td class="cart_btn_cntnt">
+											Sub Total : <span>@total </span>
+										</td>
+										<td></td>
+									</tr>
+								}
 							}
 						</tbody>
 					</table>
