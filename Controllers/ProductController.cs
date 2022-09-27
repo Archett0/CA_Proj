@@ -1,7 +1,12 @@
 ﻿using System.Threading.Tasks;
 using CA_Proj.Data;
+using CA_Proj.Models;
+using Castle.Core.Configuration;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MySql.Data.MySqlClient;
+
 
 namespace CA_Proj.Controllers
 {
@@ -18,5 +23,6 @@ namespace CA_Proj.Controllers
         {
             return View(await _context.Products.ToListAsync());
         }
+        
     }
 }
