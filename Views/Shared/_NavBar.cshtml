@@ -117,6 +117,7 @@
 	</nav>
 </header>
 <!-- st login wrapper Start -->
+
 <div class="modal fade st_pop_form_wrapper" id="myModal" role="dialog">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -124,15 +125,17 @@
 			<div class="st_pop_form_heading_wrapper float_left">
 				<h3>Log in</h3>
 			</div>
-			<div class="st_profile_input float_left">
-				<input type="text" placeholder="Username">
-			</div>
-			<div class="st_profile_input st_profile__pass_input_pop float_left">
-				<input type="password" placeholder="Password">
-			</div>
-			<div class="st_form_pop_login_btn float_left">
-				<a href="">LOGIN</a>
-			</div>
+			<form action="/Login/Login" method="POST">
+				<div class="st_profile_input float_left">
+					<input type="text" name="username" placeholder="Username">
+				</div>
+				<div class="st_profile_input st_profile__pass_input_pop float_left">
+					<input type="password" name="password" placeholder="Password">
+				</div>
+				<div class="st_form_pop_login_btn float_left">
+					<input type="submit" value="Login" />
+				</div>
+			</form>
 			<div class="st_form_pop_signin_btn float_left">
 				<h4>Don’t have an account? <a href="#" data-toggle="modal" data-target="#myModa2" target="_blank">Sign Up</a></h4>
 				<h5>I agree to the <a href="#">Terms & Conditions</a> & <a href="#">Privacy Policy</a></h5>
@@ -140,6 +143,7 @@
 		</div>
 	</div>
 </div>
+
 <div class="modal fade st_pop_form_wrapper" id="myModa2" role="dialog">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -147,15 +151,17 @@
 			<div class="st_pop_form_heading_wrapper float_left">
 				<h3>Sign Up</h3>
 			</div>
-			<div class="st_profile_input float_left">
-				<input type="text" placeholder="Username">
-			</div>
-			<div class="st_profile_input st_profile__pass_input_pop float_left">
-				<input type="password" placeholder="Password">
-			</div>
-			<div class="st_form_pop_login_btn float_left">
-				<a href="">REGISTER</a>
-			</div>
+			<form action="/Register/Register" method="POST">
+				<div class="st_profile_input float_left">
+					<input type="text" name="username" placeholder="Username">
+				</div>
+				<div class="st_profile_input st_profile__pass_input_pop float_left">
+					<input type="password" name="password" placeholder="Password">
+				</div>
+				<div class="st_form_pop_login_btn float_left">
+					<input type="submit" value="Register" />
+				</div>
+			</form>
 			<div class="st_form_pop_signin_btn st_form_pop_signin_btn_signup float_left">
 				<h5>I agree to the <a href="#">Terms & Conditions</a> & <a href="#">Privacy Policy</a></h5>
 			</div>

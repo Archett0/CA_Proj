@@ -1,5 +1,6 @@
 ﻿using CA_Proj.Models;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
 using System;
 
@@ -35,10 +36,10 @@ namespace CA_Proj
                         {
                             user = new User
                             {
-                                Id = reader.GetGuid(0),
-                                Username = reader.GetString(1),
-                                Password = reader.GetString(2),
-                                Nickname = reader.GetString(3),
+                                Id = (int)reader["user_id"],
+                                Username = (string)reader["username"],
+                                Password = (string)reader["password"],
+                                Nickname = (string)reader["nickname"]
                             };
                         }
                     }
@@ -57,7 +58,7 @@ namespace CA_Proj
             using (MySqlConnection conn = new MySqlConnection(connStr))
             {
                 conn.Open();
-
+                //Console.WriteLine("GetUserByUsername:conn.Open();");
                 string q = String.Format(@"SELECT * FROM `user`
                 WHERE username = '{0}'", username);
 
@@ -65,25 +66,27 @@ namespace CA_Proj
                 {
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
+                        //Console.WriteLine("GetUserByUsername:reader");
                         if (reader.Read())
                         {
+                            //Console.WriteLine("GetUserByUsername:getuser");
                             user = new User
                             {
-                                Id = reader.GetGuid(0),
-                                Username = reader.GetString(1),
-                                Password = reader.GetString(2),
-                                Nickname = reader.GetString(3)
+                                Id = (int)reader["user_id"],
+                                Username = (string)reader["username"],
+                                Password = (string)reader["password"],
+                                Nickname = (string)reader["nickname"]
                             };
                         }
                     }
                 }
                 conn.Close();
             }
-
+            //Console.WriteLine("GetUserByUsername:returnuser");
             return user;
         }
 
-        public string AddSession(Guid userId)
+        public string AddSession(int userId)
         {
             string sessionId = null;
             Guid guid = Guid.NewGuid();

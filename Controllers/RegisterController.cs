@@ -8,15 +8,15 @@ using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 using System;
 
 namespace CA_Proj.Controllers
-{ 
-    public class LoginController : Controller
-    {
-        private UserDB db;
-        public LoginController(IConfiguration cfg)
+{
+	public class RegisterController : Controller
+	{
+        /*private UserDB db;
+        public RegisterController(IConfiguration cfg)
         {
             db = new UserDB(cfg.GetConnectionString("SystemContext"));
         }
-        public IActionResult Login(IFormCollection form)
+        public IActionResult Register(IFormCollection form)
         {
             // data from client
             string username = form["username"];
@@ -35,13 +35,10 @@ namespace CA_Proj.Controllers
                     // ask browser to save these cookies and send back next time
                     Response.Cookies.Append("SessionId", sessionId);
 
-                    // send user to Product page
-                    return RedirectToAction("Index", "Gallery");
+                    return RedirectToAction("Index", "Product");
                 }
             }
-           // Console.WriteLine("nulllllllllllllllll");
             return RedirectToAction("Index", "Product");
-        }
-
+        }*/
     }
 }
