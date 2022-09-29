@@ -24,7 +24,7 @@ namespace CA_Proj.Controllers
             //System.Console.WriteLine("string now:{0},{1}",userID,cart_upto_date);
             if ((cart_upto_date==false)&&userID!=0)
             {
-                var query = _context.purchases.AsQueryable();
+                var query = _context.Purchases.AsQueryable();
                 //var test = _context.purchases;
                 query = query.Where(c => c.User_id == userID);
                 query = query.Where(c => c.Is_cart == 1);
@@ -45,7 +45,7 @@ namespace CA_Proj.Controllers
                     //System.Console.WriteLine("here we are");
                     return View(ret.Result);
                 }
-                }
+            }
             else
             {
                 var cart = HttpContext.Session.GetObject<List<Models.PurchaseProduct>>("cart");
@@ -58,7 +58,7 @@ namespace CA_Proj.Controllers
             int userID = HttpContext.Session.GetObject<int>("userid");
             if (userID != 0)
             {
-                var query = _context.purchases.AsQueryable();
+                var query = _context.Purchases.AsQueryable();
                 query = query.Where(c => c.User_id == userID);
                 query = query.Where(c => c.Is_cart == 0);
                 System.Console.WriteLine(query.Count());
