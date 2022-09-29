@@ -27,7 +27,7 @@ namespace CA_Proj
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-
+            services.AddSession();
             // Add DB Contexts
             services.AddDbContext<SystemContext>(options =>
                 options.UseMySQL(Configuration.GetConnectionString("SystemContext")));
@@ -48,7 +48,7 @@ namespace CA_Proj
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseSession();
             app.UseRouting();
 
             app.UseAuthorization();

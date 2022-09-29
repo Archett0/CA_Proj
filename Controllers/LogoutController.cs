@@ -4,9 +4,10 @@ namespace CA_Proj.Controllers
 {
 	public class LogoutController : Controller
 	{
-		public IActionResult Index()
+		public IActionResult Logout()
 		{
-			return View();
-		}
+			HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Product");
+        }
 	}
 }

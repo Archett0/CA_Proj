@@ -1,44 +1,32 @@
-﻿using CA_Proj.Models;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-using Microsoft.Extensions.Configuration;
-using Microsoft.EntityFrameworkCore;
-using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
-using System;
+
+using CA_Proj.Data;
+using MySql.Data.MySqlClient;
 
 namespace CA_Proj.Controllers
 {
 	public class RegisterController : Controller
 	{
-        /*private UserDB db;
-        public RegisterController(IConfiguration cfg)
-        {
-            db = new UserDB(cfg.GetConnectionString("SystemContext"));
-        }
         public IActionResult Register(IFormCollection form)
         {
-            // data from client
             string username = form["username"];
             string password = form["password"];
-
-            User user = db.GetUserByUsername(username);
-            if (user != null)
+            var sql = $"SELECT * FROM `user` WHERE username=@p0";
+            var userExistOrNot = UserData.QueryIfUserExist(sql,new MySqlParameter("p0",username));
+            if (userExistOrNot)
             {
-                Console.WriteLine("11111111");
-                // check if provided password matches the one in the database
-                if (user.Password == password)
+                return Json(new
                 {
-                    // add a new session for this user who has login successfully
-                    string sessionId = db.AddSession(user.Id);
-
-                    // ask browser to save these cookies and send back next time
-                    Response.Cookies.Append("SessionId", sessionId);
-
-                    return RedirectToAction("Index", "Product");
-                }
+                    success = false,
+                    message= "The user name already exists!"
+                });
             }
+            //id(The "id" column will be set as the primary key and will be auto-incrementing.),username,password,nickname
+            sql = $"INSERT INTO `user` (username,`password`,`nickname`) VALUES (@p0,@p1,@p2)";
+            UserData.UpdateToRegister(sql, new MySqlParameter("p0", username), new MySqlParameter("p1", password), new MySqlParameter("p2", username));
             return RedirectToAction("Index", "Product");
-        }*/
+        }
     }
 }

@@ -4,6 +4,9 @@
 	ViewData["Title"] = "Gallery";
 	var modelCount = @Model.Count();
 }
+@if(ViewBag.IsLogin){
+	<div>Welcome: @ViewBag.Username <a href="/logout/logout">Logout</a></div>
+}
 
 <!-- ck title wrapper -->
 <div class="ck_title_main_wrapper float_left">
@@ -127,16 +130,16 @@
 													<a href="#"><i class="flaticon-left-arrow"></i></a>
 												</li>
 												<li class="btc_shop_pagi">
-													<a href="#">01</a>
+													<a href="/Product/index/01">01</a>
 												</li>
 												<li class="btc_shop_pagi">
-													<a href="#">02</a>
+													<a href="/Product/index/02">02</a>
 												</li>
 												<li class="btc_third_pegi btc_shop_pagi">
-													<a href="#">03</a>
+													<a href="/Product/index/03">03</a>
 												</li>
 												<li class="hidden-xs btc_shop_pagi">
-													<a href="#">04</a>
+													<a href="/Product/index/04">04</a>
 												</li>
 												<li>
 													<a href="#"><i class="flaticon-right-arrow"></i></a>

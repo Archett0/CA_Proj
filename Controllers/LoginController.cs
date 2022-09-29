@@ -6,41 +6,39 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 using System;
+using CA_Proj.Data;
+using MySql.Data.MySqlClient;
 
 namespace CA_Proj.Controllers
 { 
     public class LoginController : Controller
     {
-        private UserDB db;
-        public LoginController(IConfiguration cfg)
-        {
-            db = new UserDB(cfg.GetConnectionString("SystemContext"));
-        }
+        
         public IActionResult Login(IFormCollection form)
         {
             // data from client
             string username = form["username"];
             string password = form["password"];
 
-            User user = db.GetUserByUsername(username);
-            if (user != null)
+            var sql = $"SELECT * FROM `user` WHERE username=@p0 AND `password`=@p1";
+            var usernamePasswordCorretOrNot = UserData.QueryIfUserExist(sql,new MySqlParameter("p0",username),new MySqlParameter("p1",password));
+            if (usernamePasswordCorretOrNot)
             {
-                Console.WriteLine("11111111");
-                // check if provided password matches the one in the database
-                if (user.Password == password)
+                HttpContext.Session.SetString("username",username);
+                
+                /*return Json(new
                 {
-                    // add a new session for this user who has login successfully
-                    string sessionId = db.AddSession(user.Id);
+                    success = true
+                });*/
+                // send user to Cart page
+                return RedirectToAction("Index", "Product");
 
-                    // ask browser to save these cookies and send back next time
-                    Response.Cookies.Append("SessionId", sessionId);
-
-                    // send user to Product page
-                    return RedirectToAction("Index", "Gallery");
-                }
             }
-           // Console.WriteLine("nulllllllllllllllll");
-            return RedirectToAction("Index", "Product");
+            return Json(new
+            {
+                success = false,
+                message= "You have entered an incorrect user name or password. Please try again."
+            }) ;
         }
 
     }
