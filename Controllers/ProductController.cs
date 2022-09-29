@@ -24,6 +24,9 @@ namespace CA_Proj.Controllers
         {
             var username=HttpContext.Session.GetString("username");
             ViewBag.Username=username;
+            var sql = "SELECT* FROM product LIMIT 9";
+            ViewData["products"] = ProductData.Query(sql);
+            //ViewBag.Messages= ProductData.Query(sql);
             if (string.IsNullOrEmpty(username)) {
                 ViewBag.IsLogin=false;
             }
@@ -49,34 +52,6 @@ namespace CA_Proj.Controllers
             return View(await _context.Products.ToListAsync());
         }
 
-        public static List<Product> GetProductsInDifferentPage(string sql)
-        {
-            List<Product> products = new List<Product>();
-
-            using (MySqlConnection conn = new MySqlConnection("SystemContext"))
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand(sql, conn);
-                MySqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    Product product = new Product()
-                    {
-                        ProductId = (int)reader["product_id"],
-                        ProductName = (string)reader["product_name"],
-                        ProductDescription = (string)reader["product_description"],
-                        ProductImage = (string)reader["product_image"],
-                        ProductPrice = (double)reader["product_price"],
-                        ProductDownloadLink = (string)reader["product_download_link"],
-                        ProductOverallRating = (double)reader["product_overall_rating"],
-                        ProductKeywords = (string)reader["product_keywords"],
-                        ProductQuantitySold = (int)reader["product_quantity_sold"],
-                    };
-                    products.Add(product);
-                }
-            }
-            return products;
-        }
+        
     }
 }

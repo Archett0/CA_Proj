@@ -30,7 +30,8 @@ namespace CA_Proj.Data
                         ProductPrice = (double)reader["product_price"],
                         ProductDownloadLink = (string)reader["product_download_link"],
                         ProductOverallRating = (double)reader["product_overall_rating"],
-                        ProductKeywords = (string)reader["product_keywords"],
+                        // Unable to cast object of type 'System.DBNull' to type 'System.String'
+                        //ProductKeywords = (string)reader["product_keywords"],
                         ProductQuantitySold = (int)reader["product_quantity_sold"],
                     };
                     products.Add(product);
@@ -61,7 +62,7 @@ namespace CA_Proj.Data
                         ProductPrice = (double)reader["product_price"],
                         ProductDownloadLink = (string)reader["product_download_link"],
                         ProductOverallRating = (double)reader["product_overall_rating"],
-                        ProductKeywords = (string)reader["product_keywords"],
+                        //ProductKeywords = (string)reader["product_keywords"],
                         ProductQuantitySold = (int)reader["product_quantity_sold"],
                     };
                     products.Add(product);
@@ -98,7 +99,7 @@ namespace CA_Proj.Data
                         ProductPrice = (double)reader["product_price"],
                         ProductDownloadLink = (string)reader["product_download_link"],
                         ProductOverallRating = (double)reader["product_overall_rating"],
-                        ProductKeywords = (string)reader["product_keywords"],
+                        //ProductKeywords = (string)reader["product_keywords"],
                         ProductQuantitySold = (int)reader["product_quantity_sold"],
                     };
                 };
