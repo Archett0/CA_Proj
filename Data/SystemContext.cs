@@ -1,5 +1,6 @@
 ﻿using CA_Proj.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace CA_Proj.Data
 {
@@ -17,8 +18,8 @@ namespace CA_Proj.Data
             // make Username to be a column that has unique values
             modelBuilder.Entity<User>().HasIndex(x => x.Username).IsUnique();
         }
-
-        public DbSet<Product> Products { get; set; }
+        public static DbSet<Product> Products { get; set; }
         public DbSet<User> Users { get; set; }
+
     }
 }

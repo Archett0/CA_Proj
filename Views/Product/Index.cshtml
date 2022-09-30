@@ -2,8 +2,13 @@
 
 @{
 	ViewData["Title"] = "Gallery";
-	var modelCount = @Model.Count();
+	List<Product> products = (List<Product>)ViewData["products"];
+	List<Product> allProducts = (List<Product>)ViewData["allProducts"];
+	int page =(int) ViewData["page"];
+	//var modelCount = @Model.Count();
 }
+	
+	
 @if(ViewBag.IsLogin){
 	<div>Welcome: @ViewBag.Username  这里加了个登出的链接 <a href="/logout/logout">Logout</a></div>
 }
@@ -39,14 +44,14 @@
 						<div class="col-lg-5 col-md-5 col-sm-12 col-12">
 							<div class="gc_shop_indx_search_box_wrapper">
 								<div class="gc_shop_indx_search_box">
-									@if (modelCount >= 9)
+									@if (allProducts.Count >= 9)
 									{
 										@*TODO:FIX THIS*@
-										<p><span>Showing 1-9</span> of @modelCount Results</p>
+										<p><span>Showing @(1+page*9)-@(9+page*9)</span> of @allProducts.Count Results</p>
 									}
 									else
 									{
-										<p><span>Showing 1-@modelCount</span> of @modelCount Results</p>
+										<p><span>Showing 1-@allProducts.Count</span> of @allProducts.Count Results</p>
 									}
 								</div>
 							</div>
@@ -85,7 +90,7 @@
 						<div class="tab-content">
 							<div id="menu1" class="tab-pane active">
 								<div class="row">
-									@foreach (var item in Model)
+												@foreach (var item in products)
 									{
 										<div class="col-lg-4 col-md-6 col-sm-6 col-12">
 											<div class="ck_elem_slide_img_wrapper ck_elem_slide_img_wrapper_inner float_left">
@@ -152,7 +157,7 @@
 							@*横板排版*@
 							<div id="menu2" class="tab-pane fade">
 								<div class="row">
-									@foreach (var item in Model)
+									@foreach (var item in products)
 									{
 										<div class="col-md-12">
 											<div class="ck_elem_slide_img_wrapper ck_elem_slide_img_wrapper_inner ck_elem_slide_img_wrapper_inner_list float_left">

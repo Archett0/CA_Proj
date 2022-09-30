@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CA_Proj.Data;
 using CA_Proj.Models;
@@ -16,40 +17,65 @@ namespace CA_Proj.Controllers
     {
         private readonly SystemContext _context;
 
+     
         public ProductController(SystemContext context)
         {
             _context = context;
         }
-        public async Task<IActionResult> Index([FromRoute]string id)
+        
+        public IActionResult Index([FromRoute]string id)
         {
+            
             var username=HttpContext.Session.GetString("username");
             ViewBag.Username=username;
-            var sql = "SELECT* FROM product LIMIT 9";
-            ViewData["products"] = ProductData.Query(sql);
-            //ViewBag.Messages= ProductData.Query(sql);
-            if (string.IsNullOrEmpty(username)) {
+
+            var sql = "SELECT* FROM product ";
+            List<Product> allProducts = ProductData.Query(sql);
+            ViewData["allProducts"] = allProducts;
+                
+            if (string.IsNullOrEmpty(username)) {//haven't login
                 ViewBag.IsLogin=false;
-            }
-            else
-            {
-                ViewBag.IsLogin = true;
-            }
-            /*var name = Request.Cookies["SessionId"];
-            if (string.IsNullOrEmpty(name))//haven't login
-            {
-                return View(await _context.Products.ToListAsync());
             }
             else//already login
             {
-                return RedirectToAction("Index", "Cart");
-            }*/
-            /*if (id == "01")
+                ViewBag.IsLogin = true;
+            }
+          
+            int page=0;
+            if (id == "01"||id==null)
             {
-                var sql="SELECT* FROM product LIMIT 9";
-                ProductData
-            }*/
-           
-            return View(await _context.Products.ToListAsync());
+                page = 0;
+                ViewData["page"] = page;
+                sql = "SELECT* FROM product LIMIT 9";
+                List<Product> products = ProductData.Query(sql);
+                ViewData["products"] = products;
+            }
+            if (id == "02")
+            {
+                page = 1;
+                ViewData["page"] = page;
+                sql = "SELECT* FROM product LIMIT 9 OFFSET 9";
+                List<Product> products = ProductData.Query(sql);
+                ViewData["products"] = products;
+            }
+            if (id == "03")
+            {
+                page = 2;
+                ViewData["page"] = page;
+                sql = "SELECT* FROM product LIMIT 9 OFFSET 18";
+                List<Product> products = ProductData.Query(sql);
+                ViewData["products"] = products;
+            }
+            if (id == "04")
+            {
+                page = 3;
+                ViewData["page"] = page;
+                sql = "SELECT* FROM product LIMIT 9 OFFSET 27";
+                List<Product> products = ProductData.Query(sql);
+                ViewData["products"] = products;
+            }
+
+            return View();
         }
 
         

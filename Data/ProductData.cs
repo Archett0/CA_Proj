@@ -8,7 +8,7 @@ using System.Data;
 
 namespace CA_Proj.Data
 {
-    public class ProductData:Data
+    public class ProductData : Data
     {
         public static List<Product> Query(string sql)
         {
@@ -71,8 +71,8 @@ namespace CA_Proj.Data
 
             return products;
         }
-        
-        
+
+
         public static Product GetProductDetailsByProductId(int productId)
         {
             Product product = null;
