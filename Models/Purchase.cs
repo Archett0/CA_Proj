@@ -16,10 +16,10 @@ namespace CA_Proj.Models
         public DateTime CreateTime { get; set; }
 
         [Column("purchase_payment_time")]
-        public DateTime PaymentTime { get; set; }
+        public DateTime? PaymentTime { get; set; }
 
         [Column("purchase_shipping_time")]
-        public DateTime ShippingTime { get; set; }
+        public DateTime? ShippingTime { get; set; }
 
         [Column("purchase_total_price")]
         public double Total_price { get; set; }
