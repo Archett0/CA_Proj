@@ -7,8 +7,12 @@ namespace CA_Proj.Models
     {
         [Column("purchase_id")]
         public int PurchaseId { get; set; }
+
+        public Purchase Purchase { get; set; }
+
         [Column("product_id")]
         public int ProductId{ get; set; }
+
         public Product Product { get; set; }
 
         [Column("product_quantity")]
