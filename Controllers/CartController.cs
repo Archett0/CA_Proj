@@ -48,8 +48,8 @@ namespace CA_Proj.Controllers
             }
             else
             {
-                var cart = HttpContext.Session.GetObject<List<Models.PurchaseProduct>>("cart");
-                return View(cart);
+                //var cart = HttpContext.Session.GetObject<List<Models.PurchaseProduct>>("cart");
+                return View();
             }
         }
     }

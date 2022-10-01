@@ -21,6 +21,7 @@
 	<link rel="stylesheet" type="text/css" href="~/css/responsive.css" />
 	<!--favicon-->
 	<link rel="shortcut icon" type="image/png" href="~/images/favicon.png" />
+
 </head>
 <body>
 	<!-- pre-loader Start -->
@@ -34,11 +35,6 @@
 
 	@*渲染Body*@
 	@RenderBody()
-	@* <div class="container"> *@
-	@* 	<main role="main" class="demo-3"> *@
-	@* 		@RenderBody() *@
-	@* 	</main> *@
-	@* </div> *@
 	
 	@*渲染Footer*@
 	@await Html.PartialAsync("_Footer")

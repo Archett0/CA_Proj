@@ -11,13 +11,10 @@ namespace CA_Proj.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Product>(entity =>
-            {
-                entity.ToTable("product");
-                
-            });
+            modelBuilder.Entity<Product>().ToTable("product"); 
             modelBuilder.Entity<ProductActivationCode>().ToTable("product_activation_code");
             modelBuilder.Entity<Purchase>().ToTable("purchase");
+            modelBuilder.Entity<User>().ToTable("user");
             modelBuilder.Entity<PurchaseProduct>(entity => 
             {
                 entity.HasKey(vf => new { vf.PurchaseId, vf.ProductId });//if you don't use composite key here, the same purchase will only have one order.
@@ -30,5 +27,7 @@ namespace CA_Proj.Data
         public DbSet<ProductActivationCode> ProductActivationCodes { get; set; }
         public DbSet<Purchase> Purchases { get; set; }
         public DbSet<PurchaseProduct> PurchaseProducts { get; set; }
+
+        public DbSet<User> Users { get; set; }
     }  
 }
