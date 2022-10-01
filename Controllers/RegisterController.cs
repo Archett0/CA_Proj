@@ -19,6 +19,10 @@ namespace CA_Proj.Controllers
         public IActionResult Register(IFormCollection form)
         {
             string username = form["username"];
+            if(username == "default_customer")
+            {
+                return View();
+            }
             string password = form["password"];
             var query = _context.Users.AsQueryable();
             var result = query.Where(x => x.Username == username && x.Password == password);

@@ -75,15 +75,16 @@
 								<span>X @ppQuantity</span>
 								@if (ppQuantity > 1)
 								{
+									SelectList selectlist = new SelectList(purchase.ActivationCodes, "activationCodes"); 
 									<span>
-										<select asp-items="purchase.ActivationCodes">
+										<select asp-items=@selectlist>
 											<option>Your Activation Codes</option>
 										</select>
 									</span>
 								}
 								else
 								{
-									var enumerator = purchase.ActivationCodes.Items.GetEnumerator();
+									var enumerator = purchase.ActivationCodes.GetEnumerator();
 									enumerator.MoveNext();
 									<span>
 										@enumerator.Current

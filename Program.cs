@@ -7,6 +7,7 @@ namespace CA_Proj
     {
         public static void Main(string[] args)
         {
+            System.Console.WriteLine("Start hosts");
             CreateHostBuilder(args).Build().Run();
         }
 

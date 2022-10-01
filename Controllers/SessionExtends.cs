@@ -12,12 +12,13 @@ namespace CA_Proj.Controllers
         {
             public static void SetObject<T>(this ISession session, string key, T obj)
             {
-            System.Console.WriteLine("inserting session key:{0} ,value:{1}", key, obj.ToString());
+                System.Console.WriteLine("inserting session key:{0} ,value:{1}", key, obj.ToString());
                 if (obj.GetType().IsGenericType && obj.GetType().GetGenericTypeDefinition() == typeof(List<>))
                 {
                     session.SetString(key, JsonConvert.SerializeObject(obj));
+                    //System.Console.WriteLine(session.GetString(key));
                 }
-                session.SetString(key,obj.ToString());
+                else session.SetString(key,obj.ToString());
             }
             public static T GetObject<T>(this ISession session, string key)
             {
@@ -28,6 +29,7 @@ namespace CA_Proj.Controllers
                     try
                     {
                         result = JsonConvert.DeserializeObject<T>(value);
+                        System.Console.WriteLine(result);
                     }
                     catch
                     {

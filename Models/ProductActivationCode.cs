@@ -5,6 +5,14 @@ namespace CA_Proj.Models
     public class ProductActivationCode
     {
         
+        public ProductActivationCode(string activationCode, int purchaseProductId, short codeStatus)
+        {
+            ActivationCode = activationCode;
+            PurchaseProductId = purchaseProductId;
+            CodeStatus = codeStatus;
+        }
+        public ProductActivationCode() { }
+
         [Key]
         [Column("activation_code")]
         public string ActivationCode { get; set; }
