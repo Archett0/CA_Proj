@@ -7,12 +7,13 @@ namespace CA_Proj.Models
         
         [Key]
         [Column("activation_code")]
-        public string Activation_code { get; set; }
+        public string ActivationCode { get; set; }
 
-        [Column("product_id")]
-        public int Product_id { get; set; }
+        [Column("purchase_product_id")]
+        public int PurchaseProductId { get; set; }
 
         [Column("code_status")]
-        public short Code_status { get; set; }
+        public short CodeStatus { get; set; }
+
     }
 }

@@ -64,6 +64,7 @@
 					<ul>
 						@foreach (var purchase in historyOrder.Products)
 						{
+							var ppQuantity = purchase.ActivationCodes.Count();
 							<li class="clearfix">
 								<figure>
 									<img src=@purchase.Product.ProductImage alt="product img" style="width: 100px" />
@@ -71,12 +72,27 @@
 								<strong>
 									@purchase.Product.ProductName
 								</strong>
-								<span>X @purchase.ProductQuantity</span>
-								<span>--ACTIVATION CODE HERE--</span>
+								<span>X @ppQuantity</span>
+								@if (ppQuantity > 1)
+								{
+									<span>
+										<select asp-items="purchase.ActivationCodes">
+											<option>Your Activation Codes</option>
+										</select>
+									</span>
+								}
+								else
+								{
+									var enumerator = purchase.ActivationCodes.Items.GetEnumerator();
+									enumerator.MoveNext();
+									<span>
+										@enumerator.Current
+									</span>
+								}
 								<span>
 									$
 									@{
-										var price = @purchase.Product.ProductPrice * @purchase.ProductQuantity;
+										var price = @purchase.Product.ProductPrice * @ppQuantity;
 									}
 									@price
 								</span>
@@ -87,44 +103,106 @@
 									var customerHaveNotRatedYet = purchase.CustomerRating.Equals(0.0);
 								}
 								@* Not Rated & Not Commented *@
-								@if (customerHaveNotRatedYet && customerHaveNotCommentYet)
+								@switch (customerHaveNotRatedYet)
 								{
-									<form asp-controller="Order" asp-action="RateAndComment" method="post">
-										<span class="st_profile_input">
-											<input name="comments" placeholder="Input Your Comment..." />
+									case true when customerHaveNotCommentYet:
+										<form asp-controller="Order" asp-action="RateAndComment" method="post">
+											<span class="st_profile_input">
+												<input name="comments" placeholder="Input Your Comment..." />
+											</span>
+											<span class="ck_elem_star">
+												<a>Your Rating :</a>
+											</span>
+											<span class="ck_elem_star">
+												<select name="rates">
+													<option value="1">1.0</option>
+													<option value="1.5">1.5</option>
+													<option value="2.0">2.0</option>
+													<option value="2.5">2.5</option>
+													<option value="3.0">3.0</option>
+													<option value="3.5">3.5</option>
+													<option value="4.0">4.0</option>
+													<option value="4.5">4.5</option>
+													<option value="5.0">5.0</option>
+												</select>
+											</span>
+											<span class="ck_offer_btn ck_offer_btn_inner float_left">
+												<button type="submit" class="btn-lg" name="whichBtn" value="comment">Comment</button>
+											</span>
+											<span class="float_left">
+												<button type="submit" class="btn-lg" name="whichBtn" value="star">Star</button>
+											</span>
+											<input hidden="" name="purchaseId" value=@purchase.PurchaseId />
+											<input hidden="" name="productId" value=@purchase.ProductId />
+										</form>
+										break;
+									// Not Commented
+									case false when customerHaveNotCommentYet:
+										<form asp-controller="Order" asp-action="RateAndComment" method="post">
+											<span class="st_profile_input">
+												<input name="comments" placeholder="Input Your Comment..." />
+											</span>
+											<span class="ck_elem_star">
+												<a>Your Rating :</a>
+											</span>
+											<span class="ck_elem_star">
+												@{
+													var stars = (int)purchase.CustomerRating;
+													for (var star = 0; star < stars; ++star)
+													{
+														<i class="fas fa-star"></i>
+													}
+													if (purchase.CustomerRating - stars >= 0.5)
+													{
+														<i class="fas fa-star-half"></i>
+													}
+												} 
+											</span>
+											<span class="ck_offer_btn ck_offer_btn_inner float_left">
+												<button type="submit" class="btn-lg" name="whichBtn" value="comment">Comment</button>
+											</span>
+											<span>&nbsp;</span>
+											<input hidden="" name="purchaseId" value=@purchase.PurchaseId />
+											<input hidden="" name="productId" value=@purchase.ProductId />
+										</form>
+										break;
+									// Not Rated
+									case true when !customerHaveNotCommentYet:
+										<span class="st_profile_input" style="height: 40px;">
+											<h5>Your Comment: </h5>
+											<h6>@purchase.CustomerComment</h6>
 										</span>
 										<span class="ck_elem_star">
 											<a>Your Rating :</a>
 										</span>
-										<span class="ck_elem_star">
-											<select name="rates">
-												<option value="1">1.0</option>
-												<option value="1.5">1.5</option>
-												<option value="2.0">2.0</option>
-												<option value="2.5">2.5</option>
-												<option value="3.0">3.0</option>
-												<option value="3.5">3.5</option>
-												<option value="4.0">4.0</option>
-												<option value="4.5">4.5</option>
-												<option value="5.0">5.0</option>
-											</select>
-										</span>
-										<span class="ck_offer_btn ck_offer_btn_inner float_left">
-											<button type="submit" class="btn-lg" name="whichBtn" value="comment">Comment</button>
-										</span>
-										<span class="float_left">
-											<button type="submit" class="btn-lg" name="whichBtn" value="star">Star</button>
-										</span>
-										<input hidden="" name="purchaseId" value=@purchase.PurchaseId />
-										<input hidden="" name="productId" value=@purchase.ProductId />
-									</form>
-								}
-								// Not Commented
-								else if (!customerHaveNotRatedYet && customerHaveNotCommentYet)
-								{
-									<form asp-controller="Order" asp-action="RateAndComment" method="post">
-										<span class="st_profile_input">
-											<input name="comments" placeholder="Input Your Comment..." />
+										<form asp-controller="Order" asp-action="RateAndComment" method="post">
+											<span class="ck_elem_star">
+												<select name="rates">
+													<option value="1">1.0</option>
+													<option value="1.5">1.5</option>
+													<option value="2.0">2.0</option>
+													<option value="2.5">2.5</option>
+													<option value="3.0">3.0</option>
+													<option value="3.5">3.5</option>
+													<option value="4.0">4.0</option>
+													<option value="4.5">4.5</option>
+													<option value="5.0">5.0</option>
+												</select>
+											</span>
+											<span>&nbsp;</span>
+											<span class="float_left">
+												<button type="submit" class="btn-lg" name="whichBtn" value="star">Star</button>
+											</span>
+											<input hidden="" name="purchaseId" value=@purchase.PurchaseId />
+											<input hidden="" name="productId" value=@purchase.ProductId />
+										</form>
+										break;
+									// Rated & Commented
+									default:
+									{
+										<span class="st_profile_input" style="height: 40px;">
+											<h5>Your Comment: </h5>
+											<h6>@purchase.CustomerComment</h6>
 										</span>
 										<span class="ck_elem_star">
 											<a>Your Rating :</a>
@@ -140,82 +218,15 @@
 												{
 													<i class="fas fa-star-half"></i>
 												}
-											}
+											} 
 										</span>
-										<span class="ck_offer_btn ck_offer_btn_inner float_left">
-											<button type="submit" class="btn-lg" name="whichBtn" value="comment">Comment</button>
-										</span>
-										<span>&nbsp;</span>
-										<input hidden="" name="purchaseId" value=@purchase.PurchaseId />
-										<input hidden="" name="productId" value=@purchase.ProductId />
-									</form>
-								}
-								// Not Rated
-								else if (customerHaveNotRatedYet && !customerHaveNotCommentYet)
-								{
-									<span class="st_profile_input" style="height: 40px;">
-										<h5>Your Comment: </h5>
-										<h6>@purchase.CustomerComment</h6>
-									</span>
-									<span class="ck_elem_star">
-										<a>Your Rating :</a>
-									</span>
-									<form asp-controller="Order" asp-action="RateAndComment" method="post">
-										<span class="ck_elem_star">
-											<select name="rates">
-												<option value="1">1.0</option>
-												<option value="1.5">1.5</option>
-												<option value="2.0">2.0</option>
-												<option value="2.5">2.5</option>
-												<option value="3.0">3.0</option>
-												<option value="3.5">3.5</option>
-												<option value="4.0">4.0</option>
-												<option value="4.5">4.5</option>
-												<option value="5.0">5.0</option>
-											</select>
-										</span>
-										<span>&nbsp;</span>
-										<span class="float_left">
-											<button type="submit" class="btn-lg" name="whichBtn" value="star">Star</button>
-										</span>
-										<input hidden="" name="purchaseId" value=@purchase.PurchaseId />
-										<input hidden="" name="productId" value=@purchase.ProductId />
-									</form>
-								}
-								// Rated & Commented
-								else
-								{
-									<span class="st_profile_input" style="height: 40px;">
-										<h5>Your Comment: </h5>
-										<h6>@purchase.CustomerComment</h6>
-									</span>
-									<span class="ck_elem_star">
-										<a>Your Rating :</a>
-									</span>
-									<span class="ck_elem_star">
-										@{
-											var stars = (int)purchase.CustomerRating;
-											for (var star = 0; star < stars; ++star)
-											{
-												<i class="fas fa-star"></i>
-											}
-											if (purchase.CustomerRating - stars >= 0.5)
-											{
-												<i class="fas fa-star-half"></i>
-											}
-										}
-									</span>
-									@* <span class="ck_offer_btn ck_offer_btn_inner float_left"> *@
-									@* 	<a href="#">Commented</a> *@
-									@* </span> *@
-									@* <span class="ck_offer_btn ck_offer_btn_inner float_left"> *@
-									@* 	<a href="#">Starred</a> *@
-									@* </span> *@
+										break;
+									}
 								}
 							</li>
 						}
 						<li class="clearfix">
-							TOTAL<span>$ @historyOrder.Purchase.Total_price</span>
+							TOTAL<span>$ @historyOrder.Purchase.TotalPrice</span>
 						</li>
 					</ul>
 				</div>

@@ -6,6 +6,7 @@ using CA_Proj.Data;
 using System.Linq;
 using CA_Proj.Models;
 using CA_Proj.ViewModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace CA_Proj.Controllers
@@ -13,6 +14,9 @@ namespace CA_Proj.Controllers
     public class OrderController : Controller
     {
         private readonly SystemContext _context;
+        private const int MaxAutoCommentTime = 30;
+        private const double AutoRatingMark = 5.0;
+        private const string AutoCommentContent = "Customer didn't comment in 30 days, system automatically commented.";
 
         public OrderController(SystemContext context)
         {
@@ -29,8 +33,8 @@ namespace CA_Proj.Controllers
             {
                 // get purchases from the current user
                 var query = _context.Purchases.AsQueryable();
-                query = query.Where(c => c.User_id == userId);
-                query = query.Where(c => c.Is_cart == 0);
+                query = query.Where(c => c.UserId == userId);
+                query = query.Where(c => c.IsCart == 0);
                 //System.Console.WriteLine(query.Count());
 
                 // if there's no match, just return to the page and let front site process the null data
@@ -49,19 +53,25 @@ namespace CA_Proj.Controllers
                     {
                         // we set the default rating and comment IF the user haven't comment in 30days after he purchased the product
                         var currentTime = DateTime.Now;
-                        var timeAfterThirtyDays = purchase.CreateTime.AddDays(30);
+                        var timeAfterThirtyDays = purchase.CreateTime.AddDays(MaxAutoCommentTime);
 
                         var purchaseProductList = await _context.PurchaseProducts
-                            .Where(c => c.PurchaseId == purchase.Purchase_id).Include(p => p.Product).ToListAsync();
+                            .Where(pp => pp.PurchaseId == purchase.PurchaseId).Include(p => p.Product).ToListAsync();
 
                         foreach (var purchaseProduct in purchaseProductList)
                         {
                             var changed = false;
+                            // find activation codes for the product
+                            var acCodeQuery = _context.ProductActivationCodes.AsQueryable();
+                            acCodeQuery = acCodeQuery.Where(c => c.PurchaseProductId == purchaseProduct.Id);
+                            purchaseProduct.ActivationCodes = new SelectList(await acCodeQuery.Select(c => c.ActivationCode).ToListAsync());
+
                             if (purchaseProduct.CustomerRating.Equals(0.0))
                             {
                                 if (currentTime >= timeAfterThirtyDays)
                                 {
-                                    purchaseProduct.CustomerRating = 5.0;
+                                    purchaseProduct.CustomerRating = AutoRatingMark;
+                                    AffectProductOverallRating(AutoRatingMark, purchaseProduct.ProductId);
                                     changed = true;
                                 }
                             }
@@ -70,18 +80,18 @@ namespace CA_Proj.Controllers
                             {
                                 if (currentTime >= timeAfterThirtyDays)
                                 {
-                                    purchaseProduct.CustomerComment = "User didn't comment in 30 days, system default commented.";
+                                    purchaseProduct.CustomerComment = AutoCommentContent;
                                     changed = true;
                                 }
                             }
 
                             // save context only if some items are changed
-                            if(changed) await _context.SaveChangesAsync();
+                            if (changed) await _context.SaveChangesAsync();
                         }
 
                         var historyOrder = new HistoryOrderViewModel
                         {
-                            PurchaseId = purchase.Purchase_id,
+                            PurchaseId = purchase.PurchaseId,
                             Purchase = purchase,
                             Products = purchaseProductList
                         };
@@ -120,6 +130,7 @@ namespace CA_Proj.Controllers
                 // process and set data
                 var actualRating = double.Parse(rates);
                 purchaseProduct.CustomerRating = actualRating;
+                AffectProductOverallRating(purchaseProduct.CustomerRating, purchaseProduct.ProductId);
             }
             // if the action is commenting the product
             else
@@ -137,6 +148,22 @@ namespace CA_Proj.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index");
+        }
+
+        // update overall rating each time a user gives rating
+        private void AffectProductOverallRating(double newCustomerRating, int productId)
+        {
+            // get target product
+            var products = _context.Products.ToList();
+            var targetProduct = products.First(p => p.ProductId.Equals(productId));
+            var currentRating = targetProduct.ProductOverallRating;
+            var pplBought = targetProduct.ProductQuantitySold;
+
+            // invalid rating
+            if (newCustomerRating is < 1.0 or > 5.0) return;
+            // set new rating and save
+            targetProduct.ProductOverallRating = (currentRating * (pplBought - 1) + newCustomerRating) / pplBought;
+            _context.SaveChanges();
         }
     }
 }
