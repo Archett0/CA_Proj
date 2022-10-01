@@ -7,10 +7,10 @@ namespace CA_Proj.Models
     {
         [Key]
         [Column("purchase_id")]
-        public int Purchase_id { get; set; }
+        public int PurchaseId { get; set; }
 
         [Column("user_id")]
-        public int User_id { get; set; }
+        public int UserId { get; set; }
 
         [Column("purchase_create_time")]
         public DateTime CreateTime { get; set; }
@@ -22,9 +22,9 @@ namespace CA_Proj.Models
         public DateTime? ShippingTime { get; set; }
 
         [Column("purchase_total_price")]
-        public double Total_price { get; set; }
+        public double TotalPrice { get; set; }
         [Column("purchase_is_cart")]
-        public int Is_cart { get; set; }
+        public int IsCart { get; set; }
         [Column("purchase_status")]
         public short Status { get; set; }
     }

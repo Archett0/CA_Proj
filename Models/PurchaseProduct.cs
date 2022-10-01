@@ -1,10 +1,15 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.Rendering;
+
 namespace CA_Proj.Models
 {
     public class PurchaseProduct
     {
+        [Key]
+        [Column("id")]
+        public int Id { get; set; }
+
         [Column("purchase_id")]
         public int PurchaseId { get; set; }
 
@@ -24,6 +29,7 @@ namespace CA_Proj.Models
         [Column("customer_comment")]
         public string CustomerComment { get; set; }
 
-        
+        [NotMapped]
+        public SelectList ActivationCodes { get; set; }
     }
 }

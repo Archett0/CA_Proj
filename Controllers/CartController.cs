@@ -26,8 +26,8 @@ namespace CA_Proj.Controllers
             {
                 var query = _context.Purchases.AsQueryable();
                 //var test = _context.purchases;
-                query = query.Where(c => c.User_id == userId);
-                query = query.Where(c => c.Is_cart == 1);
+                query = query.Where(c => c.UserId == userId);
+                query = query.Where(c => c.IsCart == 1);
                 //System.Console.WriteLine("please give me some information about how i down");
                 System.Console.WriteLine(query.Count());
                 if (query.Count() != 1)
@@ -37,7 +37,7 @@ namespace CA_Proj.Controllers
                 else
                 {
                     var purchase = query.First();
-                    var id = purchase.Purchase_id;
+                    var id = purchase.PurchaseId;
                     //System.Console.WriteLine("PurchaseId={0}",id);
                     var ret = await _context.PurchaseProducts.Where(c => c.PurchaseId == id).Include(p => p.Product).ToListAsync();
                     HttpContext.Session.SetObject("cart", ret);
