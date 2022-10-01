@@ -209,12 +209,12 @@
 										</span>
 										<span class="ck_elem_star">
 											@{
-												var stars = (int)purchase.CustomerRating;
-												for (var star = 0; star < stars; ++star)
+												var starsS = (int)purchase.CustomerRating;
+												for (var star = 0; star < starsS; ++star)
 												{
 													<i class="fas fa-star"></i>
 												}
-												if (purchase.CustomerRating - stars >= 0.5)
+												if (purchase.CustomerRating - starsS >= 0.5)
 												{
 													<i class="fas fa-star-half"></i>
 												}
