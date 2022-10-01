@@ -64,5 +64,26 @@ namespace CA_Proj.Controllers
                 return View();
             }
         }
+
+        public IActionResult CheckOut()
+        {
+            //默认登录状态
+            //将购物车订单变成非购物车订单，同时创建新的购物车空订单与用户关联，实现原购物车变为历史订单，新购物车清空。
+            return Json(new
+            {
+     
+                message = "failed."
+            });
+        }
+        public IActionResult CheckoutAndLogin(IFormCollection form)
+        {
+            //此处游客点击结账，登陆后temp购物车直接变成从购物车状态变成订单状态并且与userID关联
+            //创建新的temp购物车（userid=0就是临时购物车）
+            return Json(new
+            {
+               
+                message = "failed."
+            });
+        }
     }
 }

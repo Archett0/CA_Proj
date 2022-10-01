@@ -31,5 +31,15 @@ namespace CA_Proj.Controllers
             }
             return View(await _context.Products.ToListAsync());
         }
+
+        public IActionResult Add()
+        {
+            //传入商品的id和登录用户userid添加purchase_product数据
+            string id = Request.Query["id"];
+            return Json(new
+            {
+                message = id
+            });
+        }
     }
 }
