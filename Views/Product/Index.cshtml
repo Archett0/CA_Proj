@@ -3,8 +3,27 @@
 @{
 	ViewData["Title"] = "Libraries Gallery";
 	var modelCount = Model.Count();
+	var totolPage = (int)(@modelCount / 9 + 1);
 }
-
+<script>
+var totolPage = @totolPage;
+var modelCount = @modelCount;
+	function changePage(id)
+	{
+        for (var i = 1; i <= modelCount; i++) 
+		{ 
+			var div=document.getElementById(i)
+			
+            div.style.display = 'none';
+		}
+        for (var i = 1 + (id - 1) * 9; i <= Math.min(id * 9, modelCount); i++) 
+		{
+            var div = document.getElementById(i)
+			div.style.display = 'inline';
+            delete div.hidden
+        }
+	}
+</script>
 <!-- ck title wrapper -->
 <div class="ck_title_main_wrapper float_left">
 	<div class="container">
@@ -44,11 +63,11 @@
 									@if (modelCount >= 9)
 									{
 										@*TODO:FIX THIS*@
-										<p><span>Showing 1-9</span> of @modelCount Results</p>
+										<p class="gc_shop_index_search_count"><span>Showing 1-9</span> of @modelCount Results</p>
 									}
 									else
 									{
-										<p><span>Showing 1-@modelCount</span> of @modelCount Results</p>
+										<p class="gc_shop_index_search_count"><span>Showing 1-@modelCount</span> of @modelCount Results</p>
 									}
 								</div>
 							</div>
@@ -87,42 +106,46 @@
 						<div class="tab-content">
 							<div id="menu1" class="tab-pane active">
 								<div class="row">
-									@foreach (var item in Model)
-									{
-										<div class="col-lg-4 col-md-6 col-sm-6 col-12">
-											<div class="ck_elem_slide_img_wrapper ck_elem_slide_img_wrapper_inner float_left">
-												<div class="ck_elem_slide_img float_left">
-													<img src=@item.ProductImage alt="img">
-												</div>
-												<div class="ck_elem_slide_img_cont ck_elem_slide_img_cont_inner float_left">
-													<h3>@item.ProductName</h3>
-													@* TODO: ADD HOT SALE PRODUCTS *@
-													<div class="ck_elem_star">
-														@if (item.ProductOverallRating.Equals(0.0))
-														{
-															<text>No Rating Yet.</text>
-														}
-														else
-														{
-															var stars = (int)item.ProductOverallRating;
-															for (var star = 0; star < stars; ++star)
+									@{
+										var iterator = 0;
+															@foreach (var item in Model)
+										{
+											iterator++;
+																<div class="col-lg-4 col-md-6 col-sm-6 col-12" id=@iterator>
+																	<div class="ck_elem_slide_img_wrapper ck_elem_slide_img_wrapper_inner float_left">
+																		<div class="ck_elem_slide_img float_left">
+																			<img src=@item.ProductImage alt="img">
+																		</div>
+																		<div class="ck_elem_slide_img_cont ck_elem_slide_img_cont_inner float_left">
+																			<h3>@item.ProductName</h3>
+																			@* TODO: ADD HOT SALE PRODUCTS *@
+																			<div class="ck_elem_star">
+																				@if (item.ProductOverallRating.Equals(0.0))
 															{
-																<i class="fas fa-star"></i>
+																					<text>No Rating Yet.</text>
 															}
-															if (item.ProductOverallRating - stars >= 0.5)
+															else
 															{
-																<i class="fas fa-star-half"></i>
+																var stars = (int)item.ProductOverallRating;
+																for (var star = 0; star < stars; ++star)
+																{
+																						<i class="fas fa-star"></i>
+																}
+																if (item.ProductOverallRating - stars >= 0.5)
+																{
+																						<i class="fas fa-star-half"></i>
+																}
 															}
-														}
-													</div>
-													<p>@item.ProductDescription</p>
-													<h5>$ @item.ProductPrice</h5>
-													<div class="ck_offer_btn ck_offer_btn_inner float_left">
-														<a href="#">Add to Cart</a>
-													</div>
-												</div>
-											</div>
-										</div>
+																			</div>
+																			<p>@item.ProductDescription</p>
+																			<h5>$ @item.ProductPrice</h5>
+																			<div class="ck_offer_btn ck_offer_btn_inner float_left">
+																				<a href="#">Add to Cart</a>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+										}
 									}
 									@* TODO:分页栏 *@
 									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 hidden-sm hidden-xs">
@@ -131,18 +154,13 @@
 												<li>
 													<a href="#"><i class="flaticon-left-arrow"></i></a>
 												</li>
-												<li class="btc_shop_pagi">
-													<a href="#">01</a>
-												</li>
-												<li class="btc_shop_pagi">
-													<a href="#">02</a>
-												</li>
-												<li class="btc_third_pegi btc_shop_pagi">
-													<a href="#">03</a>
-												</li>
-												<li class="hidden-xs btc_shop_pagi">
-													<a href="#">04</a>
-												</li>
+												@for(int i=1;i<=modelCount/9+1;i++)
+												{
+													Console.WriteLine("list:" + i);
+													<li class="btc_shop_pagi">
+														<button onclick="    changePage(@i);">@i</button>
+													</li>
+												}
 												<li>
 													<a href="#"><i class="flaticon-right-arrow"></i></a>
 												</li>
@@ -393,3 +411,9 @@
 		</div>
 	</div>
 </div>
+<script>
+
+	changePage(1)
+	alert(totolPage)
+
+</script>
