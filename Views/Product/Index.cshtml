@@ -1,10 +1,15 @@
-﻿@model IEnumerable<CA_Proj.Models.Product>
+﻿<!-- ck title wrapper -->
+@model IEnumerable<CA_Proj.Models.Product>
 
 @{
-	ViewData["Title"] = "Libraries Gallery";
-	var modelCount = Model.Count();
-	var totolPage = (int)(@modelCount / 9 + 1);
+	ViewData["Title"] = "Gallery";
+	List<Product> products = (List<Product>)ViewData["products"];
+	List<Product> allProducts = (List<Product>)ViewData["allProducts"];
+	int page =(int) ViewData["page"];
+	var modelCount = @Model.Count();
+	var totolPage = modelCount / 9 + 1;
 }
+	
 <script>
 var totolPage = @totolPage;
 var modelCount = @modelCount;
@@ -24,21 +29,26 @@ var modelCount = @modelCount;
         }
 	}
 </script>
+@if(ViewBag.IsLogin){
+	<div>Welcome: @ViewBag.Username  这里加了个登出的链接 <a href="/logout/logout">Logout</a></div>
+}
+
 <!-- ck title wrapper -->
 <div class="ck_title_main_wrapper float_left">
 	<div class="container">
 		<div class="row">
 			<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
 				<div class="ck_title_cont float_left">
-					<p>Libraries Gallery</p>
+					<p>Products</p>
 				</div>
 			</div>
 			<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
 				<div class="ck_title_cont float_left">
 					<ul>
 						<li>
-							<a asp-area="" asp-controller="Product" asp-action="Index">Home</a>
+							<a asp-area="" asp-controller="Product" asp-action="Index">Home</a>&nbsp; >
 						</li>
+						<li>Products</li>
 					</ul>
 				</div>
 			</div>
@@ -49,25 +59,19 @@ var modelCount = @modelCount;
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
-				@* TODO: CONFIG INPUT BOX *@
-				<div class="st_profile_input" style="padding-bottom: 20px">
-					<form onsubmit="">
-						<input placeholder="Search for names or descriptions..."/>
-					</form>
-				</div>
 				<div class="ck_prod_filter_main_box_wrapper">
 					<div class="row">
 						<div class="col-lg-5 col-md-5 col-sm-12 col-12">
 							<div class="gc_shop_indx_search_box_wrapper">
 								<div class="gc_shop_indx_search_box">
-									@if (modelCount >= 9)
+									@if (allProducts.Count >= 9)
 									{
 										@*TODO:FIX THIS*@
-										<p class="gc_shop_index_search_count"><span>Showing 1-9</span> of @modelCount Results</p>
+										<p><span>Showing @(1+page*9)-@(9+page*9)</span> of @allProducts.Count Results</p>
 									}
 									else
 									{
-										<p class="gc_shop_index_search_count"><span>Showing 1-@modelCount</span> of @modelCount Results</p>
+										<p><span>Showing 1-@allProducts.Count</span> of @allProducts.Count Results</p>
 									}
 								</div>
 							</div>
