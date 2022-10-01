@@ -1,8 +1,6 @@
 ﻿@*
 	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@{
-}
 <header>
 	<nav class="ck_navigation_main_wrapper ck_navigation_inner_main_wrapper float_left">
 		<!-- ck header wrapper Start -->
@@ -55,7 +53,14 @@
 					</div>
 				</div>
 				<div class="ck_login_btn">
+					@if(ViewBag.IsLogin){
+					Console.WriteLine("islogin");
+					<div>Welcome: @ViewBag.Username &nbsp;<a href="/logout/logout">Logout</a></div>
+					}
+					else
+					{
 					<a href="#" data-toggle="modal" data-target="#myModal"><i class="flaticon-login-square-arrow-button-outline"></i></a>
+					}
 				</div>
 				<div class="buss_cart_section_wrapper">
 					<div class="buzz_cart">
@@ -63,45 +68,23 @@
 							<li class="buzz_cart_dropdown">
 								<a asp-area="" asp-controller="Cart" asp-action="Index"><i class="flaticon-shopping-bag"></i> <span>3</span></a>
 								<ul>
-									<li>
+									@*@foreach(var item in Model){
+										var product = item.Product;
+										var totalprice = item.ProductQuantity * product.ProductPrice;
+										<li>
 										<div class="cc_cart_wrapper1 menu-button float_left">
 											<div class="cc_cart_img_wrapper">
-												<img src="images/ft1.jpg" alt="cart_img" />
+												<img src=@product.ProductImage alt="cart_img" />
 											</div>
 											<div class="cc_cart_cont_wrapper">
-												<h4><a href="#">product name</a></h4>
-												<p>Quantity : 2 × $45</p>
-												<h5>$90</h5>
+												<h4><a href="#">@product.ProductName</a></h4>
+												<p>Quantity : @item.ProductQuantity × @product.ProductPrice</p>
+												<h5>$@totalprice</h5>
 												<button type="button" class="close" data-dismiss="modal">&times;</button>
 											</div>
 										</div>
 									</li>
-									<li>
-										<div class="cc_cart_wrapper1 menu-button float_left">
-											<div class="cc_cart_img_wrapper">
-												<img src="images/ft2.jpg" alt="cart_img" />
-											</div>
-											<div class="cc_cart_cont_wrapper">
-												<h4><a href="#">product name</a></h4>
-												<p>Quantity : 2 × $45</p>
-												<h5>$90</h5>
-												<button type="button" class="close" data-dismiss="modal">&times;</button>
-											</div>
-										</div>
-									</li>
-									<li>
-										<div class="cc_cart_wrapper1 menu-button float_left">
-											<div class="cc_cart_img_wrapper">
-												<img src="images/ft3.jpg" alt="cart_img" />
-											</div>
-											<div class="cc_cart_cont_wrapper">
-												<h4><a href="#">product name</a></h4>
-												<p>Quantity : 2 × $45</p>
-												<h5>$90</h5>
-												<button type="button" class="close" data-dismiss="modal">&times;</button>
-											</div>
-										</div>
-									</li>
+									}	*@								
 									<li>
 										<div class="buzz_cart_btn">
 											<a href="checout.html">checkout</a>
@@ -124,15 +107,17 @@
 			<div class="st_pop_form_heading_wrapper float_left">
 				<h3>Log in</h3>
 			</div>
-			<div class="st_profile_input float_left">
-				<input type="text" placeholder="Username">
-			</div>
-			<div class="st_profile_input st_profile__pass_input_pop float_left">
-				<input type="password" placeholder="Password">
-			</div>
-			<div class="st_form_pop_login_btn float_left">
-				<a href="">LOGIN</a>
-			</div>
+			<form action="/Login/Login" method="POST" >
+				<div class="st_profile_input float_left">
+					<input type="text" id="loginUsername" name="username" placeholder="Username">
+				</div>
+				<div class="st_profile_input st_profile__pass_input_pop float_left">
+					<input type="password" id="loginPassword" name="password" placeholder="Password">
+				</div>
+				<div class="st_form_pop_login_btn float_left">
+					<input type="submit" value="Login" />
+				</div>
+			</form>
 			<div class="st_form_pop_signin_btn float_left">
 				<h4>Don’t have an account? <a href="#" data-toggle="modal" data-target="#myModa2" target="_blank">Sign Up</a></h4>
 				<h5>I agree to the <a href="#">Terms & Conditions</a> & <a href="#">Privacy Policy</a></h5>
@@ -140,6 +125,7 @@
 		</div>
 	</div>
 </div>
+
 <div class="modal fade st_pop_form_wrapper" id="myModa2" role="dialog">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -147,15 +133,17 @@
 			<div class="st_pop_form_heading_wrapper float_left">
 				<h3>Sign Up</h3>
 			</div>
-			<div class="st_profile_input float_left">
-				<input type="text" placeholder="Username">
-			</div>
-			<div class="st_profile_input st_profile__pass_input_pop float_left">
-				<input type="password" placeholder="Password">
-			</div>
-			<div class="st_form_pop_login_btn float_left">
-				<a href="">REGISTER</a>
-			</div>
+			<form action="/Register/Register" method="POST">
+				<div class="st_profile_input float_left">
+					<input type="text" name="username" placeholder="Username">
+				</div>
+				<div class="st_profile_input st_profile__pass_input_pop float_left">
+					<input type="password" name="password" placeholder="Password">
+				</div>
+				<div class="st_form_pop_login_btn float_left">
+					<input type="submit" value="Register" />
+				</div>
+			</form>
 			<div class="st_form_pop_signin_btn st_form_pop_signin_btn_signup float_left">
 				<h5>I agree to the <a href="#">Terms & Conditions</a> & <a href="#">Privacy Policy</a></h5>
 			</div>

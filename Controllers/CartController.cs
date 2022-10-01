@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Collections.Generic;
 using CA_Proj.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace CA_Proj.Controllers
 {
@@ -19,7 +20,18 @@ namespace CA_Proj.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var username = HttpContext.Session.GetString("username");
+            ViewBag.Username = username;
+            if (string.IsNullOrEmpty(username))
+            {//haven't login
+                ViewBag.IsLogin = false;
+            }
+            else//already login
+            {
+                ViewBag.IsLogin = true;
+            }
             var userId = HttpContext.Session.GetObject<int>("userid");
+
             var cartUpToDate = HttpContext.Session.GetObject<bool>("cart_upto_date");
             //System.Console.WriteLine("string now:{0},{1}",userID,cart_upto_date);
             if ((cartUpToDate == false) && userId != 0)
@@ -48,8 +60,8 @@ namespace CA_Proj.Controllers
             }
             else
             {
-                var cart = HttpContext.Session.GetObject<List<Models.PurchaseProduct>>("cart");
-                return View(cart);
+                //var cart = HttpContext.Session.GetObject<List<Models.PurchaseProduct>>("cart");
+                return View();
             }
         }
     }
