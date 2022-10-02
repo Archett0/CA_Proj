@@ -20,23 +20,59 @@ namespace CA_Proj.Controllers
         public IActionResult Login(IFormCollection form)
         {
             // data from client
-            System.Console.WriteLine("islogining");
             string username = form["username"];
+            if (username == "default_customer")
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "You have entered an incorrect user name or password. Please try again."
+                });
+            }
             string password = form["password"];
-
-            //var sql = $"SELECT * FROM `user` WHERE username=@p0 AND `password`=@p1";
             var query = _context.Users.AsQueryable();
             var result = query.Where(x => x.Username == username && x.Password == password);
             if (result.Count()==1)
             {
                 var user = result.First();
+                System.Console.WriteLine(user.ToString());
                 HttpContext.Session.SetString("username",username);
-                HttpContext.Session.SetObject<int>("userid", user.Id);
-                /*return Json(new
+                HttpContext.Session.SetString("userid", user.Id.ToString());
+                //var cart = _context.Cart;
+                //cart.UserId = user.Id;
+                var cartProducts = HttpContext.Session.GetObject<List<PurchaseProduct>>("cart");
+                if (cartProducts == null) {
+                    Console.WriteLine("cart is null!");
+                    cartProducts = new List<PurchaseProduct>(); 
+                }
+                var _query = _context.Purchases.AsQueryable().Where(x => (x.IsCart == 1 && x.UserId == user.Id));
+                var id=0;
+                if (_query.Count() == 0)
                 {
-                    success = true
-                });*/
-                // send user to Cart page
+                    //storageCart = cart;
+                    id = (_context.Purchases.Count() + 1);
+                    
+                    //storageCart.PurchaseId = _context.Purchases.Count() + 1;
+                    _context.Purchases.Add(new Purchase(id));
+                    _context.SaveChanges();
+                }
+                else id = _query.First().PurchaseId;
+                var storageCartProducts=_context.PurchaseProducts.AsQueryable().Where(x=>x.PurchaseId==id).ToList();
+                if(storageCartProducts.Count() != 0)
+                foreach(var product in storageCartProducts)
+                {
+                    product.Id = 0;
+                        
+                    cartProducts.Add(product);
+                }
+                foreach(var product in cartProducts)
+                {
+                    product.PurchaseId = id;
+                }
+                //_context.Cart =storageCart;
+                HttpContext.Session.SetObject("cart",cartProducts);
+                HttpContext.Session.SetString("purchaseId", id.ToString());
+
                 return RedirectToAction("Index", "Product");
 
             }

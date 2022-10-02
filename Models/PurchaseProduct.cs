@@ -1,13 +1,35 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Linq;
 
 namespace CA_Proj.Models
 {
     public class PurchaseProduct
     {
-        [Key]
+
+
+
+        public PurchaseProduct(int purchaseId, Purchase purchase, int productId, Product product, int productQuantity, double customerRating, string customerComment, List<string> activationCodes)
+        {
+            PurchaseId = purchaseId;
+            Purchase = purchase;
+            ProductId = productId;
+            Product = product;
+            ProductQuantity = productQuantity;
+            CustomerRating = customerRating;
+            CustomerComment = customerComment;
+            ActivationCodes = activationCodes;
+            Id = 0;
+        }
+
+        public PurchaseProduct() {
+            ActivationCodes = new List<string>();
+        }
+
         [Column("id")]
+        [Key]
         public int Id { get; set; }
 
         [Column("purchase_id")]
@@ -16,7 +38,7 @@ namespace CA_Proj.Models
         public Purchase Purchase { get; set; }
 
         [Column("product_id")]
-        public int ProductId{ get; set; }
+        public int ProductId { get; set; }
 
         public Product Product { get; set; }
 
@@ -30,6 +52,6 @@ namespace CA_Proj.Models
         public string CustomerComment { get; set; }
 
         [NotMapped]
-        public SelectList ActivationCodes { get; set; }
+        public List<string> ActivationCodes { get; set; }
     }
 }

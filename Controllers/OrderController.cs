@@ -37,12 +37,11 @@ namespace CA_Proj.Controllers
 				ViewBag.IsLogin = true;
 			}
 			// TODO: This should be fixed after we could get user id from session.
-			var userId = HttpContext.Session.GetObject<int>("userid");
+			var userId = Convert.ToInt32(HttpContext.Session.GetString("userid"));
 			// var userId = HttpContext.Session.GetObject<int>("userid");
 			// get purchases from the current user
 			var query = _context.Purchases.AsQueryable();
-			query = query.Where(c => c.UserId == userId);
-			query = query.Where(c => c.IsCart == 0);
+			query = query.Where(c => c.UserId == userId && c.IsCart == 0);
 			//System.Console.WriteLine(query.Count());
 
 			// if there's no match, just return to the page and let front site process the null data
@@ -72,7 +71,7 @@ namespace CA_Proj.Controllers
 						// find activation codes for the product
 						var acCodeQuery = _context.ProductActivationCodes.AsQueryable();
 						acCodeQuery = acCodeQuery.Where(c => c.PurchaseProductId == purchaseProduct.Id);
-						purchaseProduct.ActivationCodes = new SelectList(await acCodeQuery.Select(c => c.ActivationCode).ToListAsync());
+						purchaseProduct.ActivationCodes = new List<string>(await acCodeQuery.Select(c => c.ActivationCode).ToListAsync());
 
 						if (purchaseProduct.CustomerRating.Equals(0.0))
 						{

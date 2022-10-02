@@ -6,8 +6,9 @@
     ViewData["Title"] = "Cart";
     var subTotal = 10.0;
     var discount = 0.0;
-    if (@ViewBag.Username == "user1")
-        discount = 0.2;
+
+    discount = 0.2;
+
 }
 
 <!-- ck title wrapper -->
@@ -64,58 +65,61 @@
                         <tbody>
                             @{
                                 var count = 1;
-                                @*var total = 0.0;*@
+
+                                                                            @*var total = 0.0;*@
                                 if (Model != null)
                                 {
-                                    @foreach (var item in Model)
+                                    foreach (var item in Model)
+
                                     {
                                         var product = item.Product;
                                         var totalPrice = (double)item.ProductQuantity * product.ProductPrice;
                                         subTotal = subTotal + totalPrice;
-                                        <tr>
-                                            <td>@count</td>
-                                            <td>
-                                                <div class="table_cart_img">
-                                                    <figure>
-                                                        <img src=@product.ProductImage alt="" />
-                                                    </figure>
-                                                </div>
-                                                <div class="table_cart_cntnt">
-                                                    <h1>@product.ProductName</h1>
-                                                    @*<p>Chocobar</p>*@
-                                                </div>
-                                            </td>
-                                            <td></td>
-                                            <td class="cart_page_price">$@product.ProductPrice</td>
-                                            <td>
-                                                <input value=@item.ProductQuantity type="number" />
-                                            </td>
-                                            <td class="cart_page_totl">$@totalPrice</td>
-                                            <td>
-                                                <a href="#">
-                                                    <i class="fa fa-trash"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
+
+                                                                                    <tr>
+                                                                                        <td>@count</td>
+                                                                                        <td>
+                                                                                            <div class="table_cart_img">
+                                                                                                <figure>
+                                                                                                    <img src=@product.ProductImage alt="" />
+                                                                                                </figure>
+                                                                                            </div>
+                                                                                            <div class="table_cart_cntnt">
+                                                                                                <h1>@product.ProductName</h1>
+                                                                                                @*<p>Chocobar</p>*@
+                                                                                            </div>
+                                                                                        </td>
+                                                                                        <td></td>
+                                                                                        <td class="cart_page_price">$@product.ProductPrice</td>
+                                                                                        <td>
+                                                                                            <input value=@item.ProductQuantity type="number" />
+                                                                                        </td>
+                                                                                        <td class="cart_page_totl">$@totalPrice</td>
+                                                                                        <td>
+                                                                                            <a href="#">
+                                                                                                <i class="fa fa-trash"></i>
+                                                                                            </a>
+                                                                                        </td>
+                                                                                    </tr>
                                         count++;
                                     }
-                                    <tr>
-                                        <td></td>
-                                        <td class="shop_car_btn_wrapper">
-                                            <ul>
-                                                <li>
-                                                    <a asp-area="" asp-action="Index" asp-controller="Product">Continue Shopping</a>
-                                                </li>
-                                            </ul>
-                                        </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td class="cart_btn_cntnt">
-                                            Sub Total : <span>@subTotal </span>
-                                        </td>
-                                        <td></td>
-                                    </tr>
+                                                                                <tr>
+                                                                                    <td></td>
+                                                                                    <td class="shop_car_btn_wrapper">
+                                                                                        <ul>
+                                                                                            <li>
+                                                                                                <a asp-area="" asp-action="Index" asp-controller="Product">Continue Shopping</a>
+                                                                                            </li>
+                                                                                        </ul>
+                                                                                    </td>
+                                                                                    <td></td>
+                                                                                    <td></td>
+                                                                                    <td></td>
+                                                                                    <td class="cart_btn_cntnt">
+                                                                                        Sub Total : <span>@subTotal </span>
+                                                                                    </td>
+                                                                                    <td></td>
+                                                                                </tr>
                                 }
                             }
                         </tbody>
@@ -177,15 +181,10 @@
                             <ul>
                                 <li>
                                     @{
-                                        if (@ViewBag.Username != null)
-                                        {
-                                            <a href="/Cart/CheckOut">checkout</a>
-                                        }
-                                        else
-                                        {
-                                            <a href="#" data-toggle="modal" data-target="#CheckModal">Checkout</a>
-                                        }
-                                    }
+
+                                        var href=@ViewBag.IsLogin?"/cart/CheckOut":"#";
+                                         <a href=@href >checkout</a>
+                                     }
 
                                 </li>
                             </ul>

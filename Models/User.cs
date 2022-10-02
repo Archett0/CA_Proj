@@ -13,6 +13,11 @@ namespace CA_Proj.Models
 		}
         public User() { }
 
+		public User(bool Form_Type)
+        {
+			Id = 0;
+        }
+
 		[Key]
 		[Column("user_id")]
 		public int Id { get; set; }
