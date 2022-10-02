@@ -6,7 +6,9 @@
     ViewData["Title"] = "Cart";
     var subTotal = 10.0;
     var discount = 0.0;
+
     discount = 0.2;
+
 }
 
 <!-- ck title wrapper -->
@@ -63,14 +65,17 @@
                         <tbody>
                             @{
                                 var count = 1;
+
                                                                             @*var total = 0.0;*@
                                 if (Model != null)
                                 {
                                     foreach (var item in Model)
+
                                     {
                                         var product = item.Product;
                                         var totalPrice = (double)item.ProductQuantity * product.ProductPrice;
                                         subTotal = subTotal + totalPrice;
+
                                                                                     <tr>
                                                                                         <td>@count</td>
                                                                                         <td>
@@ -176,9 +181,11 @@
                             <ul>
                                 <li>
                                     @{
+
                                         var href=@ViewBag.IsLogin?"/cart/CheckOut":"#";
                                          <a href=@href >checkout</a>
                                      }
+
                                 </li>
                             </ul>
                         </div>
