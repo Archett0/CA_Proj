@@ -1,222 +1,220 @@
 ﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @model IEnumerable<CA_Proj.Models.PurchaseProduct>
 @{
-    ViewData["Title"] = "Cart";
-    var subTotal = 10.0;
-    var discount = 0.0;
-
-    discount = 0.2;
-
+	ViewData["Title"] = "Cart";
+	var subTotal = 0.0;
+	var discount = 0.0;	
+	discount = 0.2;
 }
 
 <!-- ck title wrapper -->
 <div class="ck_title_main_wrapper float_left">
-    <div class="container">
-        <div class="row">
-            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                <div class="ck_title_cont float_left">
-                    <p>Cart</p>
-                </div>
-            </div>
-            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                <div class="ck_title_cont float_left">
-                    <ul>
-                        <li>
-                            @Html.ActionLink("Home", "Index", "Product")&nbsp; >
-                        </li>
-                        <li>Cart</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="container">
+		<div class="row">
+			<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+				<div class="ck_title_cont float_left">
+					<p>Cart</p>
+				</div>
+			</div>
+			<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+				<div class="ck_title_cont float_left">
+					<ul>
+						<li>
+							@Html.ActionLink("Home", "Index", "Product")&nbsp; >
+						</li>
+						<li>Cart</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 <!-- ck title wrapper End -->
 <!--cart product wrapper Wrapper Start -->
 <div class="cart_product_wrapper">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-9 col-md-12 col-sm-12 col-12">
-                <div class="btc_shop_single_prod_right_section">
-                    @if (Model == null || !Model.Any())
-                    {
-                        <h3>Your Cart Is Empty, Please Go Purchase More!</h3>
-                    }
-                    else
-                    {
-                        <h3>Your Cart Products (@Model.Count())</h3>
-                    }
-                </div>
-                <div class="table-responsive cart-calculations">
-                    <table class="table">
-                        <thead class="cart_table_heading">
-                            <tr>
-                                <th>item</th>
-                                <th>product</th>
-                                <th>&nbsp;</th>
-                                <th>price</th>
-                                <th>Quantity</th>
-                                <th>Total price</th>
-                                <th>&nbsp;</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @{
-                                var count = 1;
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-9 col-md-12 col-sm-12 col-12">
+				<div class="btc_shop_single_prod_right_section">
+					@if (Model == null || !Model.Any())
+					{
+						<h3>Your Cart Is Empty, Please Go Purchase More!</h3>
+					}
+					else
+					{
+						<h3>Your Cart Products (@Model.Count())</h3>
+					}
+				</div>
+				<div class="table-responsive cart-calculations">
+					<table class="table">
+						<thead class="cart_table_heading">
+							<tr>
+								<th>item</th>
+								<th>product</th>
+								<th>&nbsp;</th>
+								<th>price</th>
+								<th>Quantity</th>
+								<th>Total price</th>
+								<th>&nbsp;</th>
+							</tr>
+						</thead>
+						<tbody>
+							@{
+								var count = 1;
 
-                                                                            @*var total = 0.0;*@
-                                if (Model != null)
-                                {
-                                    foreach (var item in Model)
+								@*var total = 0.0;*@
+								if (Model != null)
+								{
+									foreach (var item in Model)
 
-                                    {
-                                        var product = item.Product;
-                                        var totalPrice = (double)item.ProductQuantity * product.ProductPrice;
-                                        subTotal = subTotal + totalPrice;
+									{
+										var product = item.Product;
+										var totalPrice = (double)item.ProductQuantity * product.ProductPrice;
+										subTotal = subTotal + totalPrice;
 
-                                                                                    <tr>
-                                                                                        <td>@count</td>
-                                                                                        <td>
-                                                                                            <div class="table_cart_img">
-                                                                                                <figure>
-                                                                                                    <img src=@product.ProductImage alt="" />
-                                                                                                </figure>
-                                                                                            </div>
-                                                                                            <div class="table_cart_cntnt">
-                                                                                                <h1>@product.ProductName</h1>
-                                                                                                @*<p>Chocobar</p>*@
-                                                                                            </div>
-                                                                                        </td>
-                                                                                        <td></td>
-                                                                                        <td class="cart_page_price">$@product.ProductPrice</td>
-                                                                                        <td>
-                                                                                            <input value=@item.ProductQuantity type="number" />
-                                                                                        </td>
-                                                                                        <td class="cart_page_totl">$@totalPrice</td>
-                                                                                        <td>
-                                                                                            <a href="#">
-                                                                                                <i class="fa fa-trash"></i>
-                                                                                            </a>
-                                                                                        </td>
-                                                                                    </tr>
-                                        count++;
-                                    }
-                                                                                <tr>
-                                                                                    <td></td>
-                                                                                    <td class="shop_car_btn_wrapper">
-                                                                                        <ul>
-                                                                                            <li>
-                                                                                                <a asp-area="" asp-action="Index" asp-controller="Product">Continue Shopping</a>
-                                                                                            </li>
-                                                                                        </ul>
-                                                                                    </td>
-                                                                                    <td></td>
-                                                                                    <td></td>
-                                                                                    <td></td>
-                                                                                    <td class="cart_btn_cntnt">
-                                                                                        Sub Total : <span>@subTotal </span>
-                                                                                    </td>
-                                                                                    <td></td>
-                                                                                </tr>
-                                }
-                            }
-                        </tbody>
-                    </table>
-                </div>
-                <div class="estimate_shiping_Wrapper_cntnt estimate_shiping_Wrapper_cntnt_2">
-                    <div class="btc_shop_single_prod_right_section">
-                        <h1>Have a coupon? Enter code here!</h1>
-                        <div class="lr_nl_form_wrapper">
-                            <input type="text" placeholder="Type Your Code">
-                            <button type="submit">apply</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-12 col-sm-12 col-12">
-                <div class="shipping_Wrapper">
-                    <div class="btc_shop_single_prod_right_section">
-                        <h1>Check your price:  </h1>
-                    </div>
-                    <div class="estimate_shiping_Wrapper_cntnt estimate_shiping_Wrapper_repsnse">
-                        <table class="table">
-                            <tbody>
-                                <tr>
-                                    <th>Sub Total :</th>
-                                    <td>
-                                        <span class="price">@subTotal</span>
+										<tr>
+											<td>@count</td>
+											<td>
+												<div class="table_cart_img">
+													<figure>
+														<img src=@product.ProductImage alt="" />
+													</figure>
+												</div>
+												<div class="table_cart_cntnt">
+													<h1>@product.ProductName</h1>
+													@*<p>Chocobar</p>*@
+												</div>
+											</td>
+											<td></td>
+											<td class="cart_page_price">$@product.ProductPrice</td>
+											<td>
+												<input value=@item.ProductQuantity type="number" />
+											</td>
+											<td class="cart_page_totl">$@totalPrice</td>
+											<td>
+												<a href="#">
+													<i class="fa fa-trash"></i>
+												</a>
+											</td>
+										</tr>
+										count++;
+									}
+									<tr>
+										<td></td>
+										<td class="shop_car_btn_wrapper">
+											<ul>
+												<li>
+													<a asp-area="" asp-action="Index" asp-controller="Product">Continue Shopping</a>
+												</li>
+											</ul>
+										</td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td class="cart_btn_cntnt">
+											Sub Total : <span>@subTotal </span>
+										</td>
+										<td></td>
+									</tr>
+								}
+							}
+						</tbody>
+					</table>
+				</div>
+				<div class="estimate_shiping_Wrapper_cntnt estimate_shiping_Wrapper_cntnt_2">
+					<div class="btc_shop_single_prod_right_section">
+						<h1>Have a coupon? Enter code here!</h1>
+						<div class="lr_nl_form_wrapper">
+							<input type="text" placeholder="Type Your Code">
+							<button type="submit">apply</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-12 col-sm-12 col-12">
+				<div class="shipping_Wrapper">
+					<div class="btc_shop_single_prod_right_section">
+						<h1>Check your price:  </h1>
+					</div>
+					<div class="estimate_shiping_Wrapper_cntnt estimate_shiping_Wrapper_repsnse">
+						<table class="table">
+							<tbody>
+								<tr>
+									<th>Sub Total :</th>
+									<td>
+										<span class="price">@subTotal</span>
 
 
-                                    </td>
-                                </tr>
-                                @*<tr>
-                                        <th>IGST 18% :</th>
-                                        <td>
-                                            <span class="price">$200.00</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>CGST 20% :</th>
-                                        <td>
-                                            <span class="price">$200.00</span>
-                                        </td>
-                                    </tr>*@
-                                <tr>
-                                    <th>Discount:</th>
-                                    <td>
-                                        <span class="price">@(subTotal*discount)</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th class="cart_btn_cntnt">Sub Total :</th>
-                                    <td>
-                                        <span class="cart_btn_cntnt_clr">@(subTotal-discount*subTotal)</span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="shop_btn_wrapper_shipping">
-                            <ul>
-                                <li>
-                                    @{
+									</td>
+								</tr>
+								@*<tr>
+									<th>IGST 18% :</th>
+									<td>
+									<span class="price">$200.00</span>
+									</td>
+									</tr>
+									<tr>
+									<th>CGST 20% :</th>
+									<td>
+									<span class="price">$200.00</span>
+									</td>
+									</tr>*@
+								<tr>
+									<th>Discount:</th>
+									<td>
+										<span class="price">@(subTotal*discount)</span>
+									</td>
+								</tr>
+								<tr>
+									<th class="cart_btn_cntnt">Sub Total :</th>
+									<td>
+										<span class="cart_btn_cntnt_clr">@(subTotal-discount*subTotal)</span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="shop_btn_wrapper_shipping">
+							<ul>
+								<li>
+									@{
 
-                                        var href=@ViewBag.IsLogin?"/cart/CheckOut":"#";
-                                         <a href=@href >checkout</a>
-                                     }
+										var href = @ViewBag.IsLogin ? "/cart/CheckOut" : "#";
+										<a href=@href>checkout</a>
+									}
 
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 <div class="modal fade st_pop_form_wrapper" id="CheckModal" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <div class="st_pop_form_heading_wrapper float_left">
-                <h3>Checkout</h3>
-            </div>
-            <form action="/Cart/CheckoutAndLogin" method="POST">
-                <div class="st_profile_input float_left">
-                    <input type="text" id="loginUsername" name="username" placeholder="Username">
-                </div>
-                <div class="st_profile_input st_profile__pass_input_pop float_left">
-                    <input type="password" id="loginPassword" name="password" placeholder="Password">
-                </div>
-                <div class="st_form_pop_login_btn float_left">
-                    <input type="submit" value="Login" />
-                </div>
-            </form>
-            @*<div class="st_form_pop_signin_btn float_left">
-                <h4>Don’t have an account? <a href="#" data-toggle="modal" data-target="#myModa2" target="_blank">Sign Up</a></h4>
-                <h5>I agree to the <a href="#">Terms & Conditions</a> & <a href="#">Privacy Policy</a></h5>
-            </div>*@
-        </div>
-    </div>
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<button type="button" class="close" data-dismiss="modal">&times;</button>
+			<div class="st_pop_form_heading_wrapper float_left">
+				<h3>Checkout</h3>
+			</div>
+			<form action="/Cart/CheckoutAndLogin" method="POST">
+				<div class="st_profile_input float_left">
+					<input type="text" id="loginUsername" name="username" placeholder="Username">
+				</div>
+				<div class="st_profile_input st_profile__pass_input_pop float_left">
+					<input type="password" id="loginPassword" name="password" placeholder="Password">
+				</div>
+				<div class="st_form_pop_login_btn float_left">
+					<input type="submit" value="Login" />
+				</div>
+			</form>
+			@*<div class="st_form_pop_signin_btn float_left">
+				<h4>Don’t have an account? <a href="#" data-toggle="modal" data-target="#myModa2" target="_blank">Sign Up</a></h4>
+				<h5>I agree to the <a href="#">Terms & Conditions</a> & <a href="#">Privacy Policy</a></h5>
+				</div>*@
+		</div>
+	</div>
 </div>

@@ -36,7 +36,7 @@ namespace CA_Proj.Controllers
             {
                 var user = result.First();
                 System.Console.WriteLine(user.ToString());
-                HttpContext.Session.SetString("username",username);
+                HttpContext.Session.SetString("username",user.Nickname);
                 HttpContext.Session.SetString("userid", user.Id.ToString());
                 //var cart = _context.Cart;
                 //cart.UserId = user.Id;
@@ -51,13 +51,16 @@ namespace CA_Proj.Controllers
                 {
                     //storageCart = cart;
                     id = (_context.Purchases.Count() + 1);
-                    
+                    var purchase=new Purchase(id)
+                    {
+                        UserId = user.Id
+                    };
                     //storageCart.PurchaseId = _context.Purchases.Count() + 1;
-                    _context.Purchases.Add(new Purchase(id));
+                    _context.Purchases.Add(purchase);
                     _context.SaveChanges();
                 }
                 else id = _query.First().PurchaseId;
-                var storageCartProducts=_context.PurchaseProducts.AsQueryable().Where(x=>x.PurchaseId==id).ToList();
+                var storageCartProducts=_context.PurchaseProducts.AsQueryable().Where(x=>x.PurchaseId==id).Include(pp => pp.Product).ToList();
                 if(storageCartProducts.Count() != 0)
                 foreach(var product in storageCartProducts)
                 {
