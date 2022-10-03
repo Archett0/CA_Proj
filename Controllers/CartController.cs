@@ -13,7 +13,7 @@ namespace CA_Proj.Controllers
     public class CartController : Controller
     {
         private SystemContext _context;
-        
+
 
         public CartController(SystemContext context)
         {
@@ -39,9 +39,9 @@ namespace CA_Proj.Controllers
             //if ((cartUpToDate == false) && userId != 0)
             //{
             //    var query = _context.Purchases.AsQueryable();
-                //var test = _context.purchases;
+            //var test = _context.purchases;
             //    query = query.Where(c => c.UserId == userId && c.IsCart == 1);
-                //System.Console.WriteLine("please give me some information about how i down");
+            //System.Console.WriteLine("please give me some information about how i down");
             //    System.Console.WriteLine(query.Count());
             //    if (query.Count() != 1)
             //    {
@@ -61,10 +61,10 @@ namespace CA_Proj.Controllers
             //}
             //else
             //{
-                System.Console.WriteLine("23333");
-                var cart = HttpContext.Session.GetObject<List<PurchaseProduct>>("cart");
-            if(cart == null)cart = new List<PurchaseProduct>();
-                return View(cart);
+            System.Console.WriteLine("23333");
+            var cart = HttpContext.Session.GetObject<List<PurchaseProduct>>("cart");
+            if (cart == null) cart = new List<PurchaseProduct>();
+            return View(cart);
             //}
         }
 
@@ -80,35 +80,37 @@ namespace CA_Proj.Controllers
             cart.Status = 0;
             cart.UserId = Convert.ToInt32(HttpContext.Session.GetString("userid"));
             //_context.Purchases.Add(cart);
-            foreach(var product in cartProduct)
+            var subtotal = 0.0;
+            foreach (var product in cartProduct)
             {
                 int num = product.ProductQuantity;
-                product.Id = _context.PurchaseProducts.Count() + 1;
-                product.Product = null;
+                product.Id = _context.PurchaseProducts.OrderBy(pp => pp.Id).Last().Id + 1;
                 product.Purchase = null;
                 product.PurchaseId = cart.PurchaseId;
                 Console.WriteLine("purchaseProductId:{0}", product.PurchaseId);
-                _context.PurchaseProducts.Add(product);     
+                subtotal += product.ProductQuantity*product.Product.ProductPrice;
+                product.Product = null;
+                _context.PurchaseProducts.Add(product);
                 _context.SaveChanges();
-                for(int i=1;i<=num;i++)
+                for (int i = 1; i <= num; i++)
                 {
                     var activation_code = CreateAndCheckCode();
                     product.ActivationCodes.Add(activation_code);
-                    _context.ProductActivationCodes.Add(new ProductActivationCode(activation_code,product.Id,0));
+                    _context.ProductActivationCodes.Add(new ProductActivationCode(activation_code, product.Id, 0));
                     _context.SaveChanges();
                 }
-                
+
             }
             //_context.Cart.IsCart = 0;
             _context.Purchases.Update(cart);
             _context.SaveChanges();
-            System.Console.WriteLine(_context.ProductActivationCodes.Count().ToString()+" "+_context.PurchaseProducts.Count().ToString());
-            
+            System.Console.WriteLine(_context.ProductActivationCodes.Count().ToString() + " " + _context.PurchaseProducts.Count().ToString());
+
             HttpContext.Session.SetObject("cart_upto_date", true);
             HttpContext.Session.SetObject("cart", new List<PurchaseProduct>());
             //_context.Cart = new Purchase(true);
 
-            return RedirectToAction("index", "cart");
+            return RedirectToAction("index", "Order");
         }
 
         private string CreateAndCheckCode()
@@ -116,7 +118,8 @@ namespace CA_Proj.Controllers
             Random rand = new Random(~unchecked((int)DateTime.Now.Ticks));
             string result = null;
             var query = _context.ProductActivationCodes.AsQueryable();
-            while (result == null || query.Where(x => x.ActivationCode == result).Count() != 0) {
+            while (result == null || query.Where(x => x.ActivationCode == result).Count() != 0)
+            {
                 for (int i = 0; i < 32; i++)
                 {
                     if (i % 8 == 0 && i > 0) result += '-';
@@ -127,29 +130,8 @@ namespace CA_Proj.Controllers
                     }
                 }
             }
-            Console.WriteLine("create a activationcode:" + result);
+            Console.WriteLine("create a activation code:" + result);
             return result;
-        }
-
-        public IActionResult CheckOut()
-        {
-            //默认登录状态
-            //将购物车订单变成非购物车订单，同时创建新的购物车空订单与用户关联，实现原购物车变为历史订单，新购物车清空。
-            return Json(new
-            {
-     
-                message = "failed."
-            });
-        }
-        public IActionResult CheckoutAndLogin(IFormCollection form)
-        {
-            //此处游客点击结账，登陆后temp购物车直接变成从购物车状态变成订单状态并且与userID关联
-            //创建新的temp购物车（userid=0就是临时购物车）
-            return Json(new
-            {
-               
-                message = "failed."
-            });
         }
     }
 }
