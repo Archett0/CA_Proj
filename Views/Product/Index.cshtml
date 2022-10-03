@@ -5,24 +5,34 @@
 	var modelCount = @Model.Count();
 	var totolPage = modelCount / 9 + 1;
 }
-	
+
 <script>
 var totolPage = @totolPage;
 var modelCount = @modelCount;
 	function changePage(id)
 	{
-        for (var i = 1; i <= modelCount; i++) 
+		for (var i = 1; i <= modelCount; i++) 
 		{ 
 			var div=document.getElementById(i)
-			
-            div.style.display = 'none';
+
+			div.style.display = 'none';
 		}
-        for (var i = 1 + (id - 1) * 9; i <= Math.min(id * 9, modelCount); i++) 
+		for (var i = 1 + (id - 1) * 9; i <= Math.min(id * 9, modelCount); i++) 
 		{
-            var div = document.getElementById(i)
+			var div = document.getElementById(i)
 			div.style.display = 'inline';
-            delete div.hidden
-        }
+		}
+	}
+
+	function resetProducts(keywords) {
+		if (keywords === "") {
+			window.parent.close()
+			window.open("/Product","_self")
+		}
+	}
+
+	function sortProducts() {
+		document.getElementById('mySort').submit()
 	}
 </script>
 
@@ -54,8 +64,8 @@ var modelCount = @modelCount;
 			<div class="col-md-12">
 				@* TODO: CONFIG INPUT BOX *@
 				<div class="st_profile_input" style="padding-bottom: 20px">
-					<form onsubmit="">
-						<input placeholder="Search for names or descriptions..."/>
+					<form asp-action="Search" asp-controller="Product" asp-area="">
+						<input onchange="resetProducts(this.value)" name="keywords" value="@ViewBag.Keywords" placeholder="Search for names or descriptions..."/>
 					</form>
 				</div>
 				<div class="ck_prod_filter_main_box_wrapper">
@@ -65,12 +75,11 @@ var modelCount = @modelCount;
 								<div class="gc_shop_indx_search_box">
 									@if (modelCount >= 9)
 									{
-										@*TODO:FIX THIS*@
 										<p class="gc_shop_index_search_count"><span>Showing 1-9</span> of @modelCount Results</p>
 									}
 									else
 									{
-										<p class="gc_shop_index_search_count"><span>Showing 1-@modelCount</span> of @modelCount Results</p>
+											<p class="gc_shop_index_search_count"><span>Showing 1-@modelCount</span> of @modelCount Results</p>
 									}
 								</div>
 							</div>
@@ -94,11 +103,38 @@ var modelCount = @modelCount;
 						<div class="col-lg-4 col-md-4 col-sm-12 col-12">
 							<div class="gc_shop_indx_select_box_wrapper">
 								<div class="gc_causes_select_box">
-									<select>
-										<option>Sort Default</option>
-										<option>Sort Default</option>
-										<option>Sort Default</option>
-									</select><i class="fa fa-angle-down"></i>
+									<form id="mySort" asp-area="" asp-controller="Product" asp-action="Sort">
+										<select name="sort_keywords" onchange="sortProducts()">
+											@if (ViewBag.SortWords.Equals("name"))
+											{
+												<option value="default">Sort By Default</option>
+												<option value="name" selected="selected">Sort By Name</option>
+												<option value="star">Sort By Rating</option>
+												<option value="price">Sort By Price</option>
+											}
+											else if (ViewBag.SortWords.Equals("star"))
+											{
+												<option value="default">Sort By Default</option>
+												<option value="name">Sort By Name</option>
+												<option value="star" selected="selected">Sort By Rating</option>
+												<option value="price">Sort By Price</option>
+											}
+											else if (ViewBag.SortWords.Equals("price"))
+											{
+												<option value="default">Sort By Default</option>
+												<option value="name">Sort By Name</option>
+												<option value="star">Sort By Rating</option>
+												<option value="price" selected="selected">Sort By Price</option>
+											}
+											else
+											{
+												<option value="default" selected="selected">Sort By Default</option>
+												<option value="name">Sort By Name</option>
+												<option value="star">Sort By Rating</option>
+												<option value="price">Sort By Price</option>
+											}
+										</select><i class="fa fa-angle-down"></i>
+									</form>
 								</div>
 							</div>
 						</div>
@@ -111,45 +147,43 @@ var modelCount = @modelCount;
 								<div class="row">
 									@{
 										var iterator = 0;
-																@foreach (var item in Model)
+										@foreach (var item in Model)
 										{
 											iterator++;
-																	<div class="col-lg-4 col-md-6 col-sm-6 col-12" id=@iterator>
-																		<div class="ck_elem_slide_img_wrapper ck_elem_slide_img_wrapper_inner float_left">
-																			<div class="ck_elem_slide_img float_left">
-																				<img src=@item.ProductImage alt="img">
-																			</div>
-																			<div class="ck_elem_slide_img_cont ck_elem_slide_img_cont_inner float_left">
-																				<h3>@item.ProductName</h3>
-																				@* TODO: ADD HOT SALE PRODUCTS *@
-																				<div class="ck_elem_star">
-																					@if (item.ProductOverallRating.Equals(0.0))
+											<div class="col-lg-4 col-md-6 col-sm-6 col-12" id=@iterator>
+												<div class="ck_elem_slide_img_wrapper ck_elem_slide_img_wrapper_inner float_left">
+													<div class="ck_elem_slide_img float_left">
+														<img src=@item.ProductImage alt="img">
+														</div>
+													<div class="ck_elem_slide_img_cont ck_elem_slide_img_cont_inner float_left"><h3>@item.ProductName</h3>
+														@* TODO: ADD HOT SALE PRODUCTS *@
+														<div class="ck_elem_star">
+															@if (item.ProductOverallRating.Equals(0.0))
 															{
-																						<text>No Rating Yet.</text>
+																<text>No Rating Yet.</text>
 															}
 															else
 															{
 																var stars = (int)item.ProductOverallRating;
 																for (var star = 0; star < stars; ++star)
 																{
-																							<i class="fas fa-star"></i>
+																	<i class="fas fa-star"></i>
 																}
 																if (item.ProductOverallRating - stars >= 0.5)
 																{
-																							<i class="fas fa-star-half"></i>
+																	<i class="fas fa-star-half"></i>
 																}
 															}
 
-																				</div>
-																				<p>@item.ProductDescription</p>
-																				<h5>$ @item.ProductPrice</h5>
-																				<div class="ck_offer_btn ck_offer_btn_inner float_left">
-																					<a href = "/Product/Add?id=@item.ProductId">Add to Cart</a>
-																				</div>
-
-																			</div>
-																		</div>
-																	</div>
+														</div>
+														<p>@item.ProductDescription</p>
+														<h5>$ @item.ProductPrice</h5>
+														<div class="ck_offer_btn ck_offer_btn_inner float_left">
+															<a href="/Product/Add?id=@item.ProductId">Add to Cart</a>
+														</div>
+													</div>
+												</div>
+											</div>
 										}
 									}
 									@* TODO:分页栏 *@
@@ -159,11 +193,11 @@ var modelCount = @modelCount;
 												<li>
 													<a href="#"><i class="flaticon-left-arrow"></i></a>
 												</li>
-												@for(int i=1;i<=modelCount/9+1;i++)
+												@for  (int i  =  1;  i  <=  modelCount  /  9  +  1;  i++)
 												{
-													<li class="btc_shop_pagi">
-														<button onclick="    changePage(@i);">@i</button>
-													</li>
+														<li class="btc_shop_pagi">
+															<button onclick="    changePage(@i);">@i</button>
+														</li>
 												}
 												<li>
 													<a href="#"><i class="flaticon-right-arrow"></i></a>
@@ -178,14 +212,14 @@ var modelCount = @modelCount;
 								<div class="row">
 									@foreach (var item in Model)
 									{
-										<div class="col-md-12">
-											<div class="ck_elem_slide_img_wrapper ck_elem_slide_img_wrapper_inner ck_elem_slide_img_wrapper_inner_list float_left">
-												<div class="ck_elem_slide_img ck_elem_slide_img_list float_left align-self-center">
-													<img src=@item.ProductImage alt="img">
-												</div>
-												<div class="ck_elem_slide_img_cont ck_elem_slide_img_cont_inner ck_elem_slide_img_list_cont float_left">
-													<h3>@item.ProductName</h3>
-													<div class="ck_elem_star">
+											<div class="col-md-12">
+												<div class="ck_elem_slide_img_wrapper ck_elem_slide_img_wrapper_inner ck_elem_slide_img_wrapper_inner_list float_left">
+													<div class="ck_elem_slide_img ck_elem_slide_img_list float_left align-self-center">
+														<img src=@item.ProductImage alt="img">
+													</div>
+													<div class="ck_elem_slide_img_cont ck_elem_slide_img_cont_inner ck_elem_slide_img_list_cont float_left">
+														<h3>@item.ProductName</h3>
+														<div class="ck_elem_star">
 														@if (item.ProductOverallRating.Equals(0.0))
 														{
 															<text>No Rating Yet.</text>
@@ -195,22 +229,22 @@ var modelCount = @modelCount;
 															var stars = (int)item.ProductOverallRating;
 															for (var star = 0; star < stars; ++star)
 															{
-																<i class="fas fa-star"></i>
+																			<i class="fas fa-star"></i>
 															}
 															if (item.ProductOverallRating - stars >= 0.5)
 															{
-																<i class="fas fa-star-half"></i>
+																			<i class="fas fa-star-half"></i>
 															}
 														}
-													</div>
-													<p>@item.ProductDescription</p>
-													<h5>$ @item.ProductPrice</h5>
-													<div class="ck_offer_btn ck_offer_btn_inner float_left">
-														<a href="#">Add to Cart</a>
+														</div>
+														<p>@item.ProductDescription</p>
+														<h5>$ @item.ProductPrice</h5>
+														<div class="ck_offer_btn ck_offer_btn_inner float_left">
+															<a href="#">Add to Cart</a>
+														</div>
 													</div>
 												</div>
 											</div>
-										</div>
 									}
 									@*TODO:分页栏*@
 									<div class="col-md-12">

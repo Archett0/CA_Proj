@@ -33,6 +33,9 @@ namespace CA_Proj.Controllers
             {
                 ViewBag.IsLogin = true;
             }
+
+            ViewBag.Keywords = "";
+            ViewBag.SortWords = "";
             return View(await _context.Products.ToListAsync());
         }
 
@@ -50,14 +53,62 @@ namespace CA_Proj.Controllers
             }
             var product = _context.Products.AsQueryable().Where(x => x.ProductId == id).First();
             var query = cart.AsQueryable().Where(x => x.ProductId == id);
-            if (query.Count() == 0) {
-                var purchaseproduct = new PurchaseProduct(id, null, id, product, 1, 1.0, null,new List<string>());
+            if (query.Count() == 0)
+            {
+                var purchaseproduct = new PurchaseProduct(id, null, id, product, 1, 0.0, null, new List<string>());
                 cart.Add(purchaseproduct);
             }
             else query.First().ProductQuantity += 1;
             HttpContext.Session.SetObject("cart", cart);
 
             return RedirectToAction("index", "cart");
+        }
+
+        public async Task<IActionResult> Search(IFormCollection input)
+        {
+            var username = HttpContext.Session.GetString("username");
+            ViewBag.Username = username;
+            if (string.IsNullOrEmpty(username))
+            {//haven't login
+                ViewBag.IsLogin = false;
+            }
+            else//already login
+            {
+                ViewBag.IsLogin = true;
+            }
+
+            var keywords = input["keywords"].ToString().Trim().ToLower();
+
+            var keyProducts = await _context.Products.Where(p =>
+                    p.ProductName.ToLower().Contains(keywords) || p.ProductDescription.ToLower().Contains(keywords))
+                .ToListAsync();
+            ViewBag.Keywords = keywords;
+            return View("Index", keyProducts);
+        }
+
+        public async Task<IActionResult> Sort(IFormCollection input)
+        {
+            var username = HttpContext.Session.GetString("username");
+            ViewBag.Username = username;
+            if (string.IsNullOrEmpty(username))
+            {//haven't login
+                ViewBag.IsLogin = false;
+            }
+            else//already login
+            {
+                ViewBag.IsLogin = true;
+            }
+
+            var keywords = input["sort_keywords"].ToString().Trim().ToLower();
+            var keyProducts = keywords switch
+            {
+                "price" => await _context.Products.OrderBy(p => p.ProductPrice).ToListAsync(),
+                "star" => await _context.Products.OrderBy(p => p.ProductOverallRating).Reverse().ToListAsync(),
+                "name" => await _context.Products.OrderBy(p => p.ProductName).ToListAsync(),
+                _ => await _context.Products.ToListAsync()
+            };
+            ViewBag.SortWords = keywords;
+            return View("Index", keyProducts);
         }
     }
 }
