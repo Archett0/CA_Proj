@@ -83,6 +83,7 @@ namespace CA_Proj.Controllers
                     p.ProductName.ToLower().Contains(keywords) || p.ProductDescription.ToLower().Contains(keywords))
                 .ToListAsync();
             ViewBag.Keywords = keywords;
+            ViewBag.SortWords = "";
             return View("Index", keyProducts);
         }
 

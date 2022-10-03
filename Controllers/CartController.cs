@@ -20,7 +20,7 @@ namespace CA_Proj.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             var username = HttpContext.Session.GetString("username");
             ViewBag.Username = username;
@@ -61,9 +61,9 @@ namespace CA_Proj.Controllers
             //}
             //else
             //{
-            System.Console.WriteLine("23333");
-            var cart = HttpContext.Session.GetObject<List<PurchaseProduct>>("cart");
-            if (cart == null) cart = new List<PurchaseProduct>();
+            // System.Console.WriteLine("23333");
+            ViewData["Discount"] = TempData["Discount"] ?? null;
+            var cart = HttpContext.Session.GetObject<List<PurchaseProduct>>("cart") ?? new List<PurchaseProduct>();
             return View(cart);
             //}
         }
@@ -88,7 +88,7 @@ namespace CA_Proj.Controllers
                 product.Purchase = null;
                 product.PurchaseId = cart.PurchaseId;
                 Console.WriteLine("purchaseProductId:{0}", product.PurchaseId);
-                subtotal += product.ProductQuantity*product.Product.ProductPrice;
+                subtotal += product.ProductQuantity * product.Product.ProductPrice;
                 product.Product = null;
                 _context.PurchaseProducts.Add(product);
                 _context.SaveChanges();
@@ -111,6 +111,17 @@ namespace CA_Proj.Controllers
             //_context.Cart = new Purchase(true);
 
             return RedirectToAction("index", "Order");
+        }
+
+        public IActionResult Discount(string coupon)
+        {
+            if(coupon == null) return RedirectToAction("Index", "Cart");
+            // get discount for user. if the coupon is not valid, alert the user
+            var discount = _context.Coupons.Where(c => c.CouponCode.Equals(coupon.Trim().ToLower()))
+                .Select(c => c.CouponDiscount).FirstOrDefault();
+
+            TempData["Discount"] = !discount.Equals(0) ? discount.ToString() : -1;
+            return RedirectToAction("Index", "Cart");
         }
 
         private string CreateAndCheckCode()

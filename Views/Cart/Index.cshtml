@@ -5,9 +5,18 @@
 @{
 	ViewData["Title"] = "Cart";
 	var subTotal = 0.0;
-	var discount = 0.0;	
-	discount = 0.2;
+	var discount = 0.0;
+	if (ViewData["Discount"] != null)
+	{
+		discount = ViewData["Discount"].Equals(-1) ? 0.0 : double.Parse(ViewData["Discount"].ToString() ?? string.Empty);
+	}
 }
+
+<script>
+	if (@ViewData["Discount"] == null || @ViewData["Discount"] === -1) {
+		alert("Invalid Coupon.");
+	}
+</script>
 
 <!-- ck title wrapper -->
 <div class="ck_title_main_wrapper float_left">
@@ -114,7 +123,7 @@
 										<td></td>
 										<td></td>
 										<td class="cart_btn_cntnt">
-											Sub Total : <span>@subTotal </span>
+											Sub Total : <span>@(Math.Round(subTotal,2))</span>
 										</td>
 										<td></td>
 									</tr>
@@ -127,8 +136,10 @@
 					<div class="btc_shop_single_prod_right_section">
 						<h1>Have a coupon? Enter code here!</h1>
 						<div class="lr_nl_form_wrapper">
-							<input type="text" placeholder="Type Your Code">
-							<button type="submit">apply</button>
+							<form asp-area="" asp-action="Discount" asp-controller="Cart">
+								<input type="text" name="coupon" placeholder="Type Your Code">
+								<button type="submit">apply</button>
+							</form>
 						</div>
 					</div>
 				</div>
@@ -144,33 +155,19 @@
 								<tr>
 									<th>Sub Total :</th>
 									<td>
-										<span class="price">@subTotal</span>
-
-
+										<span class="price">@(Math.Round(subTotal,2))</span>
 									</td>
 								</tr>
-								@*<tr>
-									<th>IGST 18% :</th>
-									<td>
-									<span class="price">$200.00</span>
-									</td>
-									</tr>
-									<tr>
-									<th>CGST 20% :</th>
-									<td>
-									<span class="price">$200.00</span>
-									</td>
-									</tr>*@
 								<tr>
 									<th>Discount:</th>
 									<td>
-										<span class="price">@(subTotal*discount)</span>
+										<span class="price">@(Math.Round(subTotal*discount,2))</span>
 									</td>
 								</tr>
 								<tr>
 									<th class="cart_btn_cntnt">Sub Total :</th>
 									<td>
-										<span class="cart_btn_cntnt_clr">@(subTotal-discount*subTotal)</span>
+										<span class="cart_btn_cntnt_clr">@(Math.Round(subTotal-discount*subTotal,2))</span>
 									</td>
 								</tr>
 							</tbody>
