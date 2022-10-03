@@ -15,6 +15,7 @@ namespace CA_Proj.Data
             modelBuilder.Entity<ProductActivationCode>().ToTable("product_activation_code");
             modelBuilder.Entity<Purchase>().ToTable("purchase");
             modelBuilder.Entity<User>().ToTable("user");
+            modelBuilder.Entity<Coupon>().ToTable("coupon");
             modelBuilder.Entity<PurchaseProduct>(entity =>
             {
                 //entity.HasKey(vf => new { vf.PurchaseId, vf.ProductId });//if you don't use composite key here, the same purchase will only have one order.
@@ -31,6 +32,6 @@ namespace CA_Proj.Data
 
         public DbSet<User> Users { get; set; }
 
-
+        public DbSet<Coupon> Coupons { get; set; }
     }  
 }
