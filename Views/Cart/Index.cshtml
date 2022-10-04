@@ -13,9 +13,44 @@
 }
 
 <script>
-	if (@ViewData["Discount"] == null || @ViewData["Discount"] === -1) {
+	@*if (@ViewData["Discount"] == null || @ViewData["Discount"] === -1) {
 		alert("Invalid Coupon.");
+	}*@
+
+	var sub;
+	var subAfter;
+	var discount;
+	var subLow;
+	var discount_num=@discount
+	var cart_form;
+
+	function mychange(productName,price,input)
+	{
+		var quantity_product = document.getElementById(input);
+        var total_product = document.getElementById(productName);
+        if (quantity_product.value < 0) quantity_product.value = 0;
+        var num = quantity_product.value;
+        var pre = quantity_product.dataset.pre;
+		quantity_product.dataset.pre=num;
+        total_product.innerHTML = (num * price).toFixed(2);
+        var minus = (pre - num) * price;
+        sub.innerHTML -= minus;
+		subLow.innerHTML= (subLow.innerHTML-minus).toFixed(2);
+		discount.innerHTML = (discount.innerHTML-discount_num*minus).toFixed(2);
+        subAfter.innerHTML = (subAfter.innerHTML-(1-discount_num)*minus).toFixed(2);
 	}
+
+	function delete_product(head_productName,productName,price,input)
+	{
+        var quantity_product = document.getElementById(input);
+        quantity_product.value = 0;
+		//console.log("removing: " + productName);
+        
+        mychange(productName, price, input);
+		var div=document.getElementById(head_productName);
+        div.parentNode.removeChild(div);
+}
+
 </script>
 
 <!-- ck title wrapper -->
@@ -72,62 +107,65 @@
 						<tbody>
 							@{
 								var count = 1;
-
-								@*var total = 0.0;*@
 								if (Model != null)
 								{
-									foreach (var item in Model)
+																																<form id="change_the_cart" asp-action="changeCart" asp-controller="Cart">
+																																@foreach (var item in Model)
 
 									{
 										var product = item.Product;
 										var totalPrice = (double)item.ProductQuantity * product.ProductPrice;
 										subTotal = subTotal + totalPrice;
 
-										<tr>
-											<td>@count</td>
-											<td>
-												<div class="table_cart_img">
-													<figure>
-														<img src=@product.ProductImage alt="" />
-													</figure>
-												</div>
-												<div class="table_cart_cntnt">
-													<h1>@product.ProductName</h1>
-													@*<p>Chocobar</p>*@
-												</div>
-											</td>
-											<td></td>
-											<td class="cart_page_price">$@product.ProductPrice</td>
-											<td>
-												<input value=@item.ProductQuantity type="number" />
-											</td>
-											<td class="cart_page_totl">$@totalPrice</td>
-											<td>
-												<a href="#">
-													<i class="fa fa-trash"></i>
-												</a>
-											</td>
-										</tr>
+																																																	<tr  id="head_@product.ProductName">
+																																																		<td>@count</td>
+																																																		<td>
+																																																			<div class="table_cart_img">
+																																																				<figure>
+																																																					<img src=@product.ProductImage alt="" />
+																																																				</figure>
+																																																			</div>
+																																																			<div class="table_cart_cntnt">
+																																																				<h1>@product.ProductName</h1>
+																																																				@*<p>Chocobar</p>*@
+																																																			</div>
+																																																		</td>
+																																																		<td></td>
+																																																		<td class="cart_page_price">$@product.ProductPrice</td>
+																																																		<td>
+																																																			<input name=@product.ProductName value=@item.ProductQuantity type="number" onchange="    mychange('total_@product.ProductName','@product.ProductPrice','quantity_@product.ProductName');" data-pre="@item.ProductQuantity" id="quantity_@product.ProductName"/>
+																																																		</td>
+																																																		<td class="cart_page_totl" id="total_@product.ProductName" >$@totalPrice</td>
+																																																		<td>
+																																																			<a href="#" onclick="    delete_product('head_@product.ProductName','total_@product.ProductName','@product.ProductPrice','quantity_@product.ProductName');">
+																																																				<i class="fa fa-trash"></i>
+																																																			</a>
+																																																		</td>
+																																																	</tr>
+																										
 										count++;
 									}
-									<tr>
-										<td></td>
-										<td class="shop_car_btn_wrapper">
-											<ul>
-												<li>
-													<a asp-area="" asp-action="Index" asp-controller="Product">Continue Shopping</a>
-												</li>
-											</ul>
-										</td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td class="cart_btn_cntnt">
-											Sub Total : <span>@(Math.Round(subTotal,2))</span>
-										</td>
-										<td></td>
-									</tr>
+																																																<tr>
+																																																	<td></td>
+																																																	<td class="shop_car_btn_wrapper">
+																																																		<ul>
+																																																			<li>
+																																																				<a asp-area="" asp-action="Index" asp-controller="Product">Continue Shopping</a>
+																																																			</li>
+																																																		</ul>
+																																																	</td>
+																																																	<td></td>
+																																																	<td></td>
+																																																	<td></td>
+																																																	<td class="cart_btn_cntnt" >
+																																																		Sub Total : <span id="SubTotal_low">@(Math.Round(subTotal,2))</span>
+																																																	</td>
+																																																	<td></td>
+																																																</tr>
+																																																<button id="the button">save your choice(s)</button>
+																																																</form>
 								}
+								
 							}
 						</tbody>
 					</table>
@@ -155,19 +193,19 @@
 								<tr>
 									<th>Sub Total :</th>
 									<td>
-										<span class="price">@(Math.Round(subTotal,2))</span>
+										<span class="price" id="SubTotal">@(Math.Round(subTotal,2))</span>
 									</td>
 								</tr>
 								<tr>
 									<th>Discount:</th>
 									<td>
-										<span class="price">@(Math.Round(subTotal*discount,2))</span>
+										<span class="price" id="Discount">@(Math.Round(subTotal*discount,2))</span>
 									</td>
 								</tr>
 								<tr>
-									<th class="cart_btn_cntnt">Sub Total :</th>
+									<th class="cart_btn_cntnt" >Sub Total :</th>
 									<td>
-										<span class="cart_btn_cntnt_clr">@(Math.Round(subTotal-discount*subTotal,2))</span>
+										<span class="cart_btn_cntnt_clr" id="SubTotal_After_Discount">@(Math.Round(subTotal-discount*subTotal,2))</span>
 									</td>
 								</tr>
 							</tbody>
@@ -178,7 +216,7 @@
 									@{
 
 										var href = @ViewBag.IsLogin ? "/cart/CheckOut" : "#";
-										<a href=@href>checkout</a>
+																																																	<a href=@href>checkout</a>
 									}
 
 								</li>
@@ -215,3 +253,15 @@
 		</div>
 	</div>
 </div>
+<script>
+	sub=document.getElementById("SubTotal");
+	subAfter = document.getElementById("SubTotal_After_Discount");
+	subLow = document.getElementById("SubTotal_low");
+	discount = document.getElementById("Discount");
+cart_form = document.getElementById("change_the_cart");
+window.onbeforeunload = function() {
+	if (event.clientX > document.body.clientWidth && event.clientY < 0 || event.altKey)
+		cart_form.submit();
+};
+
+</script>

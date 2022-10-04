@@ -113,6 +113,22 @@ namespace CA_Proj.Controllers
             return RedirectToAction("index", "Order");
         }
 
+        public IActionResult changeCart(IFormCollection cartChange)
+        {
+            var cart = HttpContext.Session.GetObject<List<PurchaseProduct>>("cart").AsQueryable();
+            foreach(var product in cartChange)
+            {
+                var name = product.Key;
+                System.Console.WriteLine("key:"+product.Key+"value:"+product.Value);
+                var pr = cart.Where(x => x.Product.ProductName == name);
+                if (pr.Any()) { 
+                    pr.First().ProductQuantity = Convert.ToInt32(product.Value);
+                }
+            }
+            HttpContext.Session.SetObject("cart", cart.ToList());
+            return RedirectToAction("Index", "Cart");
+        }
+
         public IActionResult Discount(string coupon)
         {
             if(coupon == null) return RedirectToAction("Index", "Cart");
