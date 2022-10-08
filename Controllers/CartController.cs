@@ -32,40 +32,9 @@ namespace CA_Proj.Controllers
             {
                 ViewBag.IsLogin = true;
             }
-            //var userId = HttpContext.Session.GetObject<int>("userid");
-
-            //var cartUpToDate = HttpContext.Session.GetObject<bool>("cart_upto_date");
-            //System.Console.WriteLine("string now:{0},{1}",userID,cart_upto_date);
-            //if ((cartUpToDate == false) && userId != 0)
-            //{
-            //    var query = _context.Purchases.AsQueryable();
-            //var test = _context.purchases;
-            //    query = query.Where(c => c.UserId == userId && c.IsCart == 1);
-            //System.Console.WriteLine("please give me some information about how i down");
-            //    System.Console.WriteLine(query.Count());
-            //    if (query.Count() != 1)
-            //    {
-            //        return View();
-            //    }
-            //    else
-            //    {
-            //        var purchase = query.First();
-            //        var id = purchase.PurchaseId;
-            //       //System.Console.WriteLine("PurchaseId={0}",id);
-            //        var ret = await _context.PurchaseProducts.Where(c => c.PurchaseId == id).Include(p => p.Product).ToListAsync();
-            //        HttpContext.Session.SetObject("cart", ret);
-            //        HttpContext.Session.SetObject("cart_upto_date", true);
-            //        //System.Console.WriteLine("here we are");
-            //        return View(ret);
-            //    }
-            //}
-            //else
-            //{
-            // System.Console.WriteLine("23333");
             ViewData["Discount"] = TempData["Discount"] ?? null;
             var cart = HttpContext.Session.GetObject<List<PurchaseProduct>>("cart") ?? new List<PurchaseProduct>();
             return View(cart);
-            //}
         }
 
         public IActionResult CheckOut()
@@ -87,7 +56,6 @@ namespace CA_Proj.Controllers
                 product.Id = _context.PurchaseProducts.OrderBy(pp => pp.Id).Last().Id + 1;
                 product.Purchase = null;
                 product.PurchaseId = cart.PurchaseId;
-                Console.WriteLine("purchaseProductId:{0}", product.PurchaseId);
                 subtotal += product.ProductQuantity * product.Product.ProductPrice;
                 product.Product = null;
                 _context.PurchaseProducts.Add(product);
@@ -119,7 +87,7 @@ namespace CA_Proj.Controllers
             foreach(var product in cartChange)
             {
                 var name = product.Key;
-                System.Console.WriteLine("key:"+product.Key+"value:"+product.Value);
+                //System.Console.WriteLine("key:"+product.Key+"value:"+product.Value);
                 var pr = cart.Where(x => x.Product.ProductName == name);
                 if (pr.Any()) { 
                     pr.First().ProductQuantity = Convert.ToInt32(product.Value);
