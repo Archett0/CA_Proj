@@ -64,6 +64,11 @@ namespace CA_Proj.Controllers
             // System.Console.WriteLine("23333");
             ViewData["Discount"] = TempData["Discount"] ?? null;
             var cart = HttpContext.Session.GetObject<List<PurchaseProduct>>("cart") ?? new List<PurchaseProduct>();
+            ViewBag.count = 0.0;
+            foreach (var item in cart)
+            {
+                ViewBag.count = item.ProductQuantity + ViewBag.count;
+            }
             return View(cart);
             //}
         }
@@ -81,6 +86,7 @@ namespace CA_Proj.Controllers
             cart.UserId = Convert.ToInt32(HttpContext.Session.GetString("userid"));
             //_context.Purchases.Add(cart);
             var subtotal = 0.0;
+            var numb = 0.0;
             foreach (var product in cartProduct)
             {
                 int num = product.ProductQuantity;
@@ -90,6 +96,7 @@ namespace CA_Proj.Controllers
                 Console.WriteLine("purchaseProductId:{0}", product.PurchaseId);
                 subtotal += product.ProductQuantity * product.Product.ProductPrice;
                 product.Product = null;
+                numb = numb + product.ProductQuantity;
                 _context.PurchaseProducts.Add(product);
                 _context.SaveChanges();
                 for (int i = 1; i <= num; i++)

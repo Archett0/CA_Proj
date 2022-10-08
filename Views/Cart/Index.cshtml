@@ -3,13 +3,14 @@
 *@
 @model IEnumerable<CA_Proj.Models.PurchaseProduct>
 @{
-	ViewData["Title"] = "Cart";
-	var subTotal = 0.0;
-	var discount = 0.0;
-	if (ViewData["Discount"] != null)
-	{
-		discount = ViewData["Discount"].Equals(-1) ? 0.0 : double.Parse(ViewData["Discount"].ToString() ?? string.Empty);
-	}
+    ViewData["Title"] = "Cart";
+    var subTotal = 0.0;
+    var num = 0.0;
+    var discount = 0.0;
+    if (ViewData["Discount"] != null)
+    {
+        discount = ViewData["Discount"].Equals(-1) ? 0.0 : double.Parse(ViewData["Discount"].ToString() ?? string.Empty);
+    }
 }
 
 <script>
@@ -109,14 +110,14 @@
 								var count = 1;
 								if (Model != null)
 								{
-																																<form id="change_the_cart" asp-action="changeCart" asp-controller="Cart">
+																								<form id="change_the_cart" asp-action="changeCart" asp-controller="Cart">
 																																@foreach (var item in Model)
 
-									{
-										var product = item.Product;
-										var totalPrice = (double)item.ProductQuantity * product.ProductPrice;
-										subTotal = subTotal + totalPrice;
-
+                                                                                                                                {
+                                                                                                                                    var product = item.Product;
+                                                                                                                                    var totalPrice = (double)item.ProductQuantity * product.ProductPrice;
+                                                                                                                                    subTotal = subTotal + totalPrice;
+                                                                                                                                    num = num + item.ProductQuantity;
 																																																	<tr  id="head_@product.ProductName">
 																																																		<td>@count</td>
 																																																		<td>
