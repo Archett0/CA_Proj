@@ -167,5 +167,7 @@ namespace CA_Proj.Controllers
             Console.WriteLine("create a activation code:" + result);
             return result;
         }
+
+     
     }
 }

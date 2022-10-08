@@ -213,14 +213,18 @@
 						</table>
 						<div class="shop_btn_wrapper_shipping">
 							<ul>
-								<li>
-									@{
-
-										var href = @ViewBag.IsLogin ? "/cart/CheckOut" : "#";
-																																																	<a href=@href>checkout</a>
-									}
-
-								</li>
+                                <li>
+                                    @{
+                                        if (@ViewBag.Username != null)
+                                        {
+                                            <a href="/Cart/CheckOut">checkout</a>
+                                        }
+                                        else
+                                        {
+                                            <a href="#" data-toggle="modal" data-target="#CheckModal">Checkout</a>
+                                        }
+                                    }
+                                </li>
 							</ul>
 						</div>
 					</div>
@@ -236,7 +240,7 @@
 			<div class="st_pop_form_heading_wrapper float_left">
 				<h3>Checkout</h3>
 			</div>
-			<form action="/Cart/CheckoutAndLogin" method="POST">
+			<form action="/Login/Login2" method="POST">
 				<div class="st_profile_input float_left">
 					<input type="text" id="loginUsername" name="username" placeholder="Username">
 				</div>
