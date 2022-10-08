@@ -94,10 +94,11 @@ namespace CA_Proj.Controllers
             foreach(var product in cartChange)
             {
                 var name = product.Key;
-                //System.Console.WriteLine("key:"+product.Key+"value:"+product.Value);
+                //Console.WriteLine("key: "+product.Key+" value: "+product.Value);
                 var pr = cart.Where(x => x.Product.ProductName == name);
                 if (pr.Any()) { 
                     pr.First().ProductQuantity = Convert.ToInt32(product.Value);
+                    //System.Console.WriteLine("key: " + product.Key + " value: " + product.Value);
                 }
             }
             HttpContext.Session.SetObject("cart", cart.ToList());

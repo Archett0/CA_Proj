@@ -9,6 +9,7 @@
 <script>
 var totolPage = @totolPage;
 var modelCount = @modelCount;
+var product_number
 	function changePage(id)
 	{
 		for (var i = 1; i <= modelCount; i++) 
@@ -22,6 +23,7 @@ var modelCount = @modelCount;
 			var div = document.getElementById(i)
 			div.style.display = 'inline';
 		}
+        product_number.innerHTML = "Showing " + (1 + (id - 1) * 9) + " - " + Math.min(id * 9, modelCount);
 	}
 
 	function resetProducts(keywords) {
@@ -34,6 +36,8 @@ var modelCount = @modelCount;
 	function sortProducts() {
 		document.getElementById('mySort').submit()
 	}
+
+
 </script>
 
 
@@ -75,11 +79,11 @@ var modelCount = @modelCount;
 								<div class="gc_shop_indx_search_box">
 									@if (modelCount >= 9)
 									{
-										<p class="gc_shop_index_search_count"><span>Showing 1-9</span> of @modelCount Results</p>
+										<p class="gc_shop_index_search_count"><span id="product_number">Showing 1-9</span> of @modelCount Results</p>
 									}
 									else
 									{
-											<p class="gc_shop_index_search_count"><span>Showing 1-@modelCount</span> of @modelCount Results</p>
+											<p class="gc_shop_index_search_count"><span id="product_number">Showing 1-@modelCount</span> of @modelCount Results</p>
 									}
 								</div>
 							</div>
@@ -147,43 +151,43 @@ var modelCount = @modelCount;
 								<div class="row">
 									@{
 										var iterator = 0;
-										@foreach (var item in Model)
+															@foreach (var item in Model)
 										{
 											iterator++;
-											<div class="col-lg-4 col-md-6 col-sm-6 col-12" id=@iterator>
-												<div class="ck_elem_slide_img_wrapper ck_elem_slide_img_wrapper_inner float_left">
-													<div class="ck_elem_slide_img float_left">
-														<img src=@item.ProductImage alt="img">
-														</div>
-													<div class="ck_elem_slide_img_cont ck_elem_slide_img_cont_inner float_left"><h3>@item.ProductName</h3>
-														@* TODO: ADD HOT SALE PRODUCTS *@
-														<div class="ck_elem_star">
-															@if (item.ProductOverallRating.Equals(0.0))
+																<div class="col-lg-4 col-md-6 col-sm-6 col-12" id=@iterator>
+																	<div class="ck_elem_slide_img_wrapper ck_elem_slide_img_wrapper_inner float_left">
+																		<div class="ck_elem_slide_img float_left">
+																			<img src=@item.ProductImage alt="img">
+																			</div>
+																		<div class="ck_elem_slide_img_cont ck_elem_slide_img_cont_inner float_left"><h3>@item.ProductName</h3>
+																			@* TODO: ADD HOT SALE PRODUCTS *@
+																			<div class="ck_elem_star">
+																				@if (item.ProductOverallRating.Equals(0.0))
 															{
-																<text>No Rating Yet.</text>
+																					<text>No Rating Yet.</text>
 															}
 															else
 															{
 																var stars = (int)item.ProductOverallRating;
 																for (var star = 0; star < stars; ++star)
 																{
-																	<i class="fas fa-star"></i>
+																						<i class="fas fa-star"></i>
 																}
 																if (item.ProductOverallRating - stars >= 0.5)
 																{
-																	<i class="fas fa-star-half"></i>
+																						<i class="fas fa-star-half"></i>
 																}
 															}
 
-														</div>
-														<p>@item.ProductDescription</p>
-														<h5>$ @item.ProductPrice</h5>
-														<div class="ck_offer_btn ck_offer_btn_inner float_left">
-															<a href="/Product/Add?id=@item.ProductId">Add to Cart</a>
-														</div>
-													</div>
-												</div>
-											</div>
+																			</div>
+																			<p>@item.ProductDescription</p>
+																			<h5>$ @item.ProductPrice</h5>
+																			<div class="ck_offer_btn ck_offer_btn_inner float_left">
+																				<a href="/Product/Add?id=@item.ProductId">Add to Cart</a>
+																			</div>
+																		</div>
+																	</div>
+																</div>
 										}
 									}
 									@* TODO:分页栏 *@
@@ -450,5 +454,7 @@ var modelCount = @modelCount;
 	</div>
 </div>
 <script>
+	product_number = document.getElementById("product_number");
 	changePage(1)
+	
 </script>
