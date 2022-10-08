@@ -60,7 +60,7 @@ namespace CA_Proj.Controllers
             }
             else query.First().ProductQuantity += 1;
             HttpContext.Session.SetObject("cart", cart);
-
+            ViewBag.num = ViewBag.num + 1;
             return RedirectToAction("index", "cart");
         }
 
